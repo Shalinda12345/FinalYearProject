@@ -1,0 +1,21 @@
+
+
+
+
+pip install models
+
+pip install email-validator
+
+pip install argon2-cffi 
+
+pip install pip install "bcrypt==3.2.2"
+
+
+
+.\.venv\Scripts\Activate.ps1
+
+uvicorn main:app --reload 
+
+
+
+npm run dev
