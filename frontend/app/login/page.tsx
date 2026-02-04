@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation"; // 1. Import useRouter
+import NavigationBar from "../navigation-bar/page";
 
 export default function login() {
   const router = useRouter(); // 2. Initialize the router
@@ -35,26 +36,29 @@ export default function login() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-10 flex flex-col gap-4">
-      {/* 4. Changed Input type from Username to Email */}
-      <input
-        type="email"
-        placeholder="Email"
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
-        className="border p-2"
-        required
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
-        className="border p-2"
-        required
-      />
-      <button type="submit" className="bg-blue-500 text-white p-2">
-        Login
-      </button>
-      <a href="/register">Not Registered Yet? Register.......</a>
-    </form>
+    <>
+      <NavigationBar />
+      <form onSubmit={handleSubmit} className="p-10 flex flex-col gap-4">
+        {/* 4. Changed Input type from Username to Email */}
+        <input
+          type="email"
+          placeholder="Email"
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          className="border p-2"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          className="border p-2"
+          required
+        />
+        <button type="submit" className="bg-blue-500 text-white p-2">
+          Login
+        </button>
+        <a href="/register">Not Registered Yet? Register.......</a>
+      </form>
+    </>
   );
 }
