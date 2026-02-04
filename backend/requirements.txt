@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pymysql
+passlib[argon2]
+argon2-cffi
+pydantic
+email-validator
+python-multipart
