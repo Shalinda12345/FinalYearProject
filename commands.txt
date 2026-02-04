@@ -21,3 +21,12 @@ uvicorn main:app --reload
 
 
 npm run dev
+
+Remove-Item -Recurse -Force .venv
+
+
+git fetch origin
+
+git branch -a
+
+git checkout <branch-name>
