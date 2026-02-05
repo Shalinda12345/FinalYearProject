@@ -39,7 +39,7 @@ export default function NavigationBar() {
         </li>
         <li>
           <a
-            href="/"
+            href="/products"
             className="relative text-zinc-700 transition-all duration-300 hover:text-blue-600 dark:text-zinc-200 dark:hover:text-blue-400 hover:font-semibold"
           >
             Our Products

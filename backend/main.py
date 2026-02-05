@@ -76,3 +76,23 @@ def admin_login(admin: schemas.AdminLogin, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid Admin Credentials")
     
     return {"message": "Admin Login successful", "admin_user": db_admin.username}
+
+
+@app.get("/products")
+def get_products(db: Session = Depends(get_db)):
+    products = db.query(models.Products).all()
+    return [schemas.ProductResponse.model_validate(p) for p in products]
+
+
+@app.post("/products")
+def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db)):
+    new_product = models.Products(
+        name=product.name,
+        description=product.description,
+        price=product.price,
+        image_url=product.image_url
+    )
+    db.add(new_product)
+    db.commit()
+    db.refresh(new_product)
+    return {"message": "Product created successfully", "product": new_product}
