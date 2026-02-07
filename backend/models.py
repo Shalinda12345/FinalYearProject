@@ -29,3 +29,11 @@ class Products(Base):
     description = Column(String(255), nullable=True)
     price = Column(Integer, nullable=False)
     image_url = Column(String(2048), nullable=False)
+
+
+class CartItems(Base):
+    __tablename__ = "cart_items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(Integer, nullable=False)
+    quantity = Column(Integer, nullable=False)

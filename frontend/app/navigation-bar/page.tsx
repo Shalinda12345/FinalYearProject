@@ -64,6 +64,12 @@ export default function NavigationBar() {
         <li className="ml-auto">
           {isLoggedIn ? (
             <div className="flex items-center gap-6">
+              <a
+                href="/cart"
+                className="px-6 py-2 rounded-lg text-zinc-700 dark:text-zinc-200 border-2 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all duration-300 font-semibold hover:border-blue-600"
+              >
+                🛒
+              </a>
               <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
                 <span className="text-sm text-blue-900 dark:text-blue-200">
                   👤

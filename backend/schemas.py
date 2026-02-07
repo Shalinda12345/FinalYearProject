@@ -37,3 +37,8 @@ class ProductResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class CartItems(BaseModel):
+    product_id: int
+    quantity: int
