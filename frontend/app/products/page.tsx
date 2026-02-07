@@ -40,6 +40,20 @@ export default function ProductsPage() {
   if (loading)
     return <div className="p-10 text-center text-xl">Loading products...</div>;
 
+  const addToCart = async (productId: number) => {
+    await fetch("http://127.0.0.1:8000/cart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        product_id: productId,
+        quantity: 1,
+      }),
+    });
+    alert("Product added to cart!");
+  };
+
   return (
     <>
       <NavigationBar />
@@ -85,7 +99,10 @@ export default function ProductsPage() {
                   <span className="text-2xl font-bold text-blue-600">
                     ${product.price.toFixed(2)}
                   </span>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">
+                  <button
+                    onClick={() => addToCart(product.id)}
+                    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-300"
+                  >
                     Add to Cart
                   </button>
                 </div>
