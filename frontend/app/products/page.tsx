@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import NavigationBar from "../navigation-bar/page";
 
 // Define what a Product looks like in TypeScript
@@ -14,6 +15,20 @@ interface Product {
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const [user, setUser] = useState("");
+  const [adminUser, setAdminUser] = useState("");
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("username");
+    const storedAdminUser = localStorage.getItem("admin_user");
+    if (storedUser) {
+      setUser(storedUser);
+    } else if (storedAdminUser) {
+      setUser(storedAdminUser);
+      setAdminUser(storedAdminUser);
+    }
+  }, []);
 
   useEffect(() => {
     // Fetch data from Python Backend
@@ -110,6 +125,15 @@ export default function ProductsPage() {
             </div>
           ))}
         </div>
+
+        {user === adminUser && (
+          <button
+            onClick={() => router.push("/admin/add-products")}
+            className="mt-6 bg-blue-500 text-white p-2 rounded mx-auto block"
+          >
+            Add Products
+          </button>
+        )}
 
         {products.length === 0 && (
           <p className="text-center text-gray-500 mt-10">

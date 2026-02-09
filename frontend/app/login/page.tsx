@@ -58,6 +58,8 @@ export default function login() {
           Login
         </button>
         <a href="/register">Not Registered Yet? Register.......</a>
+
+        <a href="/admin/login">An Admin? Click Here......</a>
       </form>
     </>
   );

@@ -11,8 +11,12 @@ export default function NavigationBar() {
   useEffect(() => {
     // Check if user is logged in
     const storedUser = localStorage.getItem("username");
+    const adminUser = localStorage.getItem("admin_user");
     if (storedUser) {
       setUser(storedUser);
+      setIsLoggedIn(true);
+    } else if (adminUser) {
+      setUser(adminUser);
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
