@@ -18,7 +18,7 @@ export default function AdminLogin() {
     if (res.ok) {
       alert("login successful");
       localStorage.setItem("admin_user", data.admin_user);
-      router.push("/admin-dashboard");
+      router.push("/admin/admin-dashboard");
     } else {
       alert("Access Denied!");
     }
