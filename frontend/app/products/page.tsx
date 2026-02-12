@@ -56,15 +56,24 @@ export default function ProductsPage() {
     return <div className="p-10 text-center text-xl">Loading products...</div>;
 
   const addToCart = async (productId: number) => {
+    const storedUserId = localStorage.getItem("user_id");
+    if (!storedUserId) {
+      alert("User not logged in!");
+      return;
+    }
+
+    const payload = {
+      user_id: parseInt(storedUserId),
+      product_id: productId,
+      quantity: 1,
+    };
+
     await fetch("http://127.0.0.1:8000/cart", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        product_id: productId,
-        quantity: 1,
-      }),
+      body: JSON.stringify(payload),
     });
     alert("Product added to cart!");
   };

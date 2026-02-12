@@ -25,6 +25,7 @@ export default function NavigationBar() {
 
   const handleLogout = () => {
     localStorage.removeItem("username");
+    localStorage.removeItem("admin_user");
     setUser("");
     setIsLoggedIn(false);
     router.push("/login");

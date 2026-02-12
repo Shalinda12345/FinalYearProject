@@ -63,7 +63,7 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
     if not db_user or not pwd_context.verify(user.password, db_user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
-    return {"message": "Login successful", "username": db_user.username}
+    return {"message": "Login successful", "id": db_user.id, "username": db_user.username, "email": db_user.email}
 
 
 @app.post("/admin/login")
@@ -104,8 +104,11 @@ cart_fallback = []
 @app.post("/cart")
 def add_to_cart(cart_item: schemas.CartItems, db: Session = Depends(get_db)):
     try:
-        # Check if the product already exists in the cart; if so, increment its quantity
-        existing = db.query(models.CartItems).filter(models.CartItems.product_id == cart_item.product_id).first()
+        # Check if the product already exists in the cart for the same user; if so, increment its quantity
+        existing = db.query(models.CartItems).filter(
+            models.CartItems.product_id == cart_item.product_id,
+            models.CartItems.user_id == cart_item.user_id,
+        ).first()
         if existing:
             # increment by 1 when adding the same item again
             existing.quantity = (existing.quantity or 0) + 1
@@ -115,6 +118,7 @@ def add_to_cart(cart_item: schemas.CartItems, db: Session = Depends(get_db)):
 
         # Otherwise create a new cart item
         new_item = models.CartItems(
+            user_id=cart_item.user_id,
             product_id=cart_item.product_id,
             quantity=cart_item.quantity,
         )
@@ -125,33 +129,48 @@ def add_to_cart(cart_item: schemas.CartItems, db: Session = Depends(get_db)):
         return {"message": "Item added to cart", "cart_item": {"product_id": new_item.product_id, "quantity": new_item.quantity, "id": new_item.id}}
     except Exception:
         # If DB insert fails, fall back to an in-memory cart so frontend still works
-        # If same product exists in fallback, increment its quantity by 1
+        # Make fallback store user-scoped items
         for item in cart_fallback:
-            if item.get("product_id") == cart_item.product_id:
+            if item.get("product_id") == cart_item.product_id and item.get("user_id") == cart_item.user_id:
                 item["quantity"] = (item.get("quantity", 0)) + 1
                 return {"message": "Item quantity updated in fallback cart", "cart_item": item}
 
-        cart_fallback.append({"product_id": cart_item.product_id, "quantity": cart_item.quantity})
+        cart_fallback.append({"user_id": cart_item.user_id, "product_id": cart_item.product_id, "quantity": cart_item.quantity})
         return {"message": "Item added to fallback cart", "cart_item": cart_fallback[-1]}
 
 @app.get("/cart")
-def get_cart(db: Session = Depends(get_db)):
+def get_cart(user_id: int | None = None, db: Session = Depends(get_db)):
+    """Return cart items. If `user_id` is provided, return only that user's items.
+    If DB is unavailable, return fallback items (optionally filtered by user_id)."""
     try:
-        cart_items = db.query(models.CartItems).all()
-        return [ {"product_id": item.product_id, "quantity": item.quantity, "id": item.id} for item in cart_items]
+        if user_id is not None:
+            cart_items = db.query(models.CartItems).filter(models.CartItems.user_id == user_id).all()
+        else:
+            cart_items = db.query(models.CartItems).all()
+
+        return [{"user": item.user_id, "product_id": item.product_id, "quantity": item.quantity, "id": item.id} for item in cart_items]
     except Exception:
-        # Return fallback in-memory cart if DB is unavailable
-        return cart_fallback
+        if user_id is None:
+            return cart_fallback
+        return [item for item in cart_fallback if item.get("user_id") == user_id]
 
 @app.delete("/cart/remove/{product_id}")
-def remove_from_cart(product_id: int, db: Session = Depends(get_db)):
+def remove_from_cart(product_id: int, user_id: int | None = None, db: Session = Depends(get_db)):
+    """Remove a product from a user's cart. If `user_id` provided, only remove for that user."""
     try:
-        db.query(models.CartItems).filter(models.CartItems.product_id == product_id).delete()
+        query = db.query(models.CartItems).filter(models.CartItems.product_id == product_id)
+        if user_id is not None:
+            query = query.filter(models.CartItems.user_id == user_id)
+
+        deleted = query.delete()
         db.commit()
-        return {"message": "Item removed from cart"}
+        return {"message": "Item removed from cart", "deleted": deleted}
     except Exception:
         global cart_fallback
-        cart_fallback = [item for item in cart_fallback if item["product_id"] != product_id]
+        if user_id is None:
+            cart_fallback = [item for item in cart_fallback if item["product_id"] != product_id]
+        else:
+            cart_fallback = [item for item in cart_fallback if not (item["product_id"] == product_id and item.get("user_id") == user_id)]
         return {"message": "Item removed from fallback cart"}
 
 
@@ -161,10 +180,47 @@ def update_cart_quantity(item_id: int, cart_item: schemas.CartItems, db: Session
         db_item = db.query(models.CartItems).filter(models.CartItems.id == item_id).first()
         if not db_item:
             raise HTTPException(status_code=404, detail="Cart item not found")
+
+        # Ensure the operation is performed by the owner of the cart item
+        if db_item.user_id != cart_item.user_id:
+            raise HTTPException(status_code=403, detail="Cannot modify another user's cart item")
         
         db_item.quantity = cart_item.quantity
         db.commit()
         db.refresh(db_item)
         return {"message": "Quantity updated", "cart_item": {"product_id": db_item.product_id, "quantity": db_item.quantity, "id": db_item.id}}
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+
+
+@app.post("/orders")
+def create_order(order: schemas.OrderCreate, db: Session = Depends(get_db)):
+    calculated_total = sum(item.price * item.quantity for item in order.items)
+
+    # 2. Create the Order Header
+    new_order = models.Order(
+        user_id=order.user_id,
+        total_amount=calculated_total
+    )
+    
+    # 3. Add items to the order object (SQLAlchemy handles the keys automatically)
+    for item in order.items:
+        new_item = models.OrderItem(
+            product_id=item.product_id,
+            quantity=item.quantity,
+            price=item.price
+        )
+        new_order.items.append(new_item)
+
+    # 4. Save everything in ONE transaction
+    try:
+        db.add(new_order)
+        db.commit()      # This pushes the Order AND all OrderItems to DB
+        db.refresh(new_order)
+        return {"status": "success", "order_id": new_order.id, "total": calculated_total}
+    except Exception as e:
+        db.rollback()    # If anything fails, undo everything
+        raise HTTPException(status_code=500, detail=str(e))

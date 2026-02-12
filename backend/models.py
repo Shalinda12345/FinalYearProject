@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, TIMESTAMP, text
+from sqlalchemy import Column, Integer, String, TIMESTAMP, func, text, DECIMAL, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
 from database import Base
 
 class User(Base):
@@ -35,5 +36,29 @@ class CartItems(Base):
     __tablename__ = "cart_items"
 
     id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
     product_id = Column(Integer, nullable=False)
     quantity = Column(Integer, nullable=False)
+
+    
+class Order(Base):
+    __tablename__ = "orders"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    total_amount = Column(DECIMAL(10, 2), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    # Relationship to items
+    items = relationship("OrderItem", back_populates="order")
+
+class OrderItem(Base):
+    __tablename__ = "order_items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    order_id = Column(Integer, ForeignKey("orders.id"))
+    product_id = Column(Integer, nullable=False)
+    quantity = Column(Integer, nullable=False)
+    price = Column(DECIMAL(10, 2), nullable=False) # Price at moment of purchase
+
+    order = relationship("Order", back_populates="items")
