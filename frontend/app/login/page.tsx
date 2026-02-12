@@ -24,6 +24,8 @@ export default function login() {
         // Optional: Save the username/token to localStorage so the Dashboard knows who it is
         localStorage.setItem("username", data.username);
 
+        localStorage.setItem("user_id", data.id);
+
         // Redirect to the dashboard
         router.push("/client-dashboard");
       } else {

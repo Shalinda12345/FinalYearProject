@@ -1,5 +1,5 @@
 # schemas.py
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel, EmailStr
 
 class UserCreate(BaseModel):
@@ -40,5 +40,17 @@ class ProductResponse(BaseModel):
 
 
 class CartItems(BaseModel):
+    user_id: int
     product_id: int
     quantity: int
+
+
+class OrderItem(BaseModel):
+    product_id: int
+    quantity: int
+    price: float 
+
+class OrderCreate(BaseModel):
+    user_id: int
+    items: List[OrderItem] 
+    

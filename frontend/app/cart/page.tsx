@@ -20,18 +20,26 @@ export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [products, setProducts] = useState<Record<number, Product>>({});
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState("");
 
   // Fetch cart and products on mount
   useEffect(() => {
+    const storedUserId = localStorage.getItem("user_id");
+
+    // 2. Safety check
+    if (!storedUserId) {
+      alert("User ID not found. Please Log Out and Log In again.");
+      return;
+    }
+
     const fetchData = async () => {
       try {
-        // Fetch cart
-        const cartRes = await fetch("http://127.0.0.1:8000/cart");
-        const cartData = await cartRes.json();
-        const cartItems = Array.isArray(cartData)
-          ? cartData
-          : cartData.cart_items || [];
-        setCart(cartItems);
+        // Fetch cart for current user only
+        const cartRes = await fetch(
+          `http://127.0.0.1:8000/cart?user_id=${storedUserId}`,
+        );
+        const cartItems = await cartRes.json();
+        setCart(Array.isArray(cartItems) ? cartItems : []);
 
         // Fetch all products
         const productsRes = await fetch("http://127.0.0.1:8000/products");
@@ -39,6 +47,9 @@ export default function CartPage() {
 
         // Create product map
         const productMap: Record<number, Product> = {};
+        // const userFromItem = cartItems[0].user;
+
+        // console.log("Cart Data fetched:", userFromItem);
         productsData.forEach((product: Product) => {
           productMap[product.id] = product;
         });
@@ -55,7 +66,9 @@ export default function CartPage() {
 
   const removeFromCart = async (productId: number) => {
     try {
-      await fetch(`http://127.0.0.1:8000/cart/remove/${productId}`, {
+      const storedUserId = localStorage.getItem("user_id");
+      const q = storedUserId ? `?user_id=${storedUserId}` : "";
+      await fetch(`http://127.0.0.1:8000/cart/remove/${productId}${q}`, {
         method: "DELETE",
       });
       setCart(cart.filter((item) => item.product_id !== productId));
@@ -71,12 +84,20 @@ export default function CartPage() {
     }
 
     try {
+      const storedUserId = localStorage.getItem("user_id");
+
+      // 2. Safety check
+      if (!storedUserId) {
+        alert("User ID not found. Please Log Out and Log In again.");
+        return;
+      }
       const response = await fetch(`http://127.0.0.1:8000/cart/${itemId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          user_id: parseInt(storedUserId),
           product_id: cart.find((item) => item.id === itemId)?.product_id,
           quantity: quantity,
         }),
@@ -98,6 +119,68 @@ export default function CartPage() {
     const product = products[item.product_id];
     return sum + (product ? product.price * item.quantity : 0);
   }, 0);
+
+  useEffect(() => {
+    // Check if user is logged in
+    const storedUser = localStorage.getItem("username");
+
+    if (storedUser) {
+      setUser(storedUser);
+    } else {
+      setUser("");
+    }
+  }, []);
+
+  const handlePurchase = async () => {
+    // 1. Retrieve the numeric ID
+    const storedUserId = localStorage.getItem("user_id");
+
+    // 2. Safety check
+    if (!storedUserId) {
+      alert("User ID not found. Please Log Out and Log In again.");
+      return;
+    }
+
+    setLoading(true);
+
+    const payload = {
+      // 3. Convert the string "5" to the number 5
+      user_id: parseInt(storedUserId),
+      items: cart.map((item) => ({
+        product_id: item.product_id,
+        quantity: item.quantity,
+        price: products[item.product_id]?.price || 0,
+      })),
+    };
+
+    try {
+      const response = await fetch("http://localhost:8000/orders/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(`Order Placed! ID: ${data.order_id}`);
+        setCart([]); // Clear the UI cart
+        // Ideally, also clear the cart in the backend here
+      } else {
+        console.error("Server Error:", data);
+        alert(
+          `Purchase failed: ${data.detail ? JSON.stringify(data.detail) : "Unknown error"}`,
+        );
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Network Error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -216,7 +299,15 @@ export default function CartPage() {
                     LKR {totalPrice.toFixed(2)}
                   </span>
                 </div>
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">
+                <button
+                  onClick={() => {
+                    cart.forEach((item) => {
+                      removeFromCart(item.product_id);
+                    });
+                    handlePurchase();
+                  }}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors"
+                >
                   Proceed to Checkout
                 </button>
               </div>
