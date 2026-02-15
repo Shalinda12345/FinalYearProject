@@ -54,3 +54,8 @@ class OrderCreate(BaseModel):
     user_id: int
     items: List[OrderItem] 
     
+
+class Activity(BaseModel):
+    id: int
+    action: str
+    timestamp: str

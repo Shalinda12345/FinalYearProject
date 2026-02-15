@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import NavigationBar from "../navigation-bar/page";
+import DashboardInteractions from "./components/page";
 
 export default function Dashboard() {
   const [user, setUser] = useState("");
@@ -22,18 +23,9 @@ export default function Dashboard() {
   return (
     <>
       <NavigationBar />
-      <div className="p-10">
-        <h1 className="text-2xl font-bold">Welcome, {user}!</h1>
-        <button
-          onClick={() => {
-            localStorage.removeItem("username");
-            router.push("/login");
-          }}
-          className="mt-4 bg-red-500 text-white p-2 rounded"
-        >
-          Logout
-        </button>
-      </div>
+      <DashboardInteractions
+        initialStats={{ total_clients: "", revenue: "" }}
+      />
     </>
   );
 }
