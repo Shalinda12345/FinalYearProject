@@ -1,4 +1,5 @@
 # main.py
+from ast import List
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -224,3 +225,53 @@ def create_order(order: schemas.OrderCreate, db: Session = Depends(get_db)):
     except Exception as e:
         db.rollback()    # If anything fails, undo everything
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+# @app.get("/orders")
+# def get_orders(db: Session = Depends(get_db)):
+#     orders = db.query(models.Order).all()
+#     return [schemas.OrderItem.model_validate(o) for o in orders]
+
+
+
+# main.py (Add this to your existing file)
+from datetime import datetime
+
+
+    
+# @app.get("/api/activities")
+# async def get_activities():
+#     # Simulate fetching a different dataset
+#     return [
+#         {"id": 1, "action": "New client 'Acme Corp' added", "timestamp": "2023-10-24 10:30"},
+#         {"id": 2, "action": "Project 'Beta' marked complete", "timestamp": "2023-10-23 14:15"},
+#         {"id": 3, "action": "Invoice #402 paid", "timestamp": "2023-10-22 09:00"},
+#     ]
+
+
+@app.get("/orders")
+async def get_orders(user_id: int | None = None, db: Session = Depends(get_db)):
+    # orders = db.query(models.Order).all()
+    try:
+        if user_id is not None:
+            orders = db.query(models.Order).filter(models.Order.user_id == user_id).all()
+        else:
+            orders = db.query(models.Order).all()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    return [
+        {
+            "id": order.id,
+            "user_id": order.user_id,
+            "total_amount": float(order.total_amount),
+            "created_at": order.created_at.isoformat(),
+            "items": [
+                {
+                    "product_id": item.product_id,
+                    "quantity": item.quantity,
+                    "price": float(item.price)
+                } for item in order.items
+            ]
+        } for order in orders
+    ]
