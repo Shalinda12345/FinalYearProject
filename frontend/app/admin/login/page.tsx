@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import NavigationBar from "../../navigation-bar/page";
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -25,28 +26,31 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="p-10 bg-red shadow-lg rounded-lg flex flex-col gap-4"
-      >
-        <h1 className="text-xl font-bold text-red-600">Admin Portal</h1>
-        <input
-          type="text"
-          placeholder="Admin Username"
-          onChange={(e) => setForm({ ...form, username: e.target.value })}
-          className="border p-2 text-green-600"
-        />
-        <input
-          type="text"
-          placeholder="Admin Password"
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          className="border p-2 text-green-600"
-        />
-        <button type="submit" className="bg-red-600 text-white p-2 font-bold">
-          Enter the System
-        </button>
-      </form>
-    </div>
+    <>
+      <NavigationBar />
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <form
+          onSubmit={handleSubmit}
+          className="p-10 bg-red shadow-lg rounded-lg flex flex-col gap-4"
+        >
+          <h1 className="text-xl font-bold text-red-600">Admin Portal</h1>
+          <input
+            type="text"
+            placeholder="Admin Username"
+            onChange={(e) => setForm({ ...form, username: e.target.value })}
+            className="border p-2 text-green-600"
+          />
+          <input
+            type="password"
+            placeholder="Admin Password"
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            className="border p-2 text-green-600"
+          />
+          <button type="submit" className="bg-red-600 text-white p-2 font-bold">
+            Enter the System
+          </button>
+        </form>
+      </div>
+    </>
   );
 }

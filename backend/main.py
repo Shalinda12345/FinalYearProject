@@ -275,3 +275,18 @@ async def get_orders(user_id: int | None = None, db: Session = Depends(get_db)):
             ]
         } for order in orders
     ]
+
+@app.get("/users")
+async def get_users(db: Session = Depends(get_db)):
+    try:
+        users = db.query(models.User).all()
+        return [
+            {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "created_at": user.created_at.isoformat()
+            } for user in users
+        ]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
