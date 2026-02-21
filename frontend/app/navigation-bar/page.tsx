@@ -31,6 +31,14 @@ export default function NavigationBar() {
     router.push("/login");
   };
 
+  const clickUser = () => {
+    if (user === "admin") {
+      router.push("/admin/admin-dashboard");
+    } else {
+      router.push("/client-dashboard");
+    }
+  };
+
   return (
     <nav className="w-full border-b border-zinc-200 bg-linear-to-r from-white to-zinc-50 dark:from-zinc-900 dark:to-black dark:border-zinc-800 shadow-sm">
       <ul className="mx-auto flex max-w-7xl items-center gap-8 px-4 py-5 text-sm font-medium sm:px-8">
@@ -77,7 +85,8 @@ export default function NavigationBar() {
               </a>
               <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
                 <a
-                  href="/client-dashboard"
+                  href="#"
+                  onClick={clickUser}
                   className="text-zinc-800 dark:text-zinc-100 font-semibold transition-all duration-300 hover:text-blue-600 dark:hover:text-blue-400"
                 >
                   <span className="text-sm text-blue-900 dark:text-blue-200">
