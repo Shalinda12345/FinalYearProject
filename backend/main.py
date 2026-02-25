@@ -98,6 +98,24 @@ def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db)
     db.refresh(new_product)
     return {"message": "Product created successfully", "product": new_product}
 
+
+@app.put("/products/{product_id}")
+def update_product(product_id: int, product: schemas.ProductCreate, db: Session = Depends(get_db)):
+    db_product = db.query(models.Products).filter(models.Products.id == product_id).first()
+    if not db_product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    # Update fields
+    db_product.name = product.name
+    db_product.description = product.description
+    db_product.price = product.price
+    db_product.image_url = product.image_url
+
+    db.commit()
+    db.refresh(db_product)
+
+    return {"message": "Product updated successfully", "product": schemas.ProductResponse.model_validate(db_product)}
+
 # Fallback in-memory cart used when DB is unavailable (useful for local dev)
 cart_fallback = []
 
