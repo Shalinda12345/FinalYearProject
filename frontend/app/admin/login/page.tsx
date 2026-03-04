@@ -3,9 +3,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import NavigationBar from "../../navigation-bar/page";
 
+const STORAGE_KEY = "session_token";
+
 export default function AdminLogin() {
   const router = useRouter();
   const [form, setForm] = useState({ username: "", password: "" });
+  const sessionDuration = 2 * 60 * 1000;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,6 +20,12 @@ export default function AdminLogin() {
     const data = await res.json();
 
     if (res.ok) {
+      const expirationTime = new Date().getTime() + sessionDuration;
+      localStorage.setItem(STORAGE_KEY, expirationTime.toString());
+      alert(
+        "Session token stored with expiration time: " +
+          new Date(expirationTime).toLocaleTimeString(),
+      );
       alert("login successful");
       localStorage.setItem("admin_user", data.admin_user);
       router.push("/admin/admin-dashboard");

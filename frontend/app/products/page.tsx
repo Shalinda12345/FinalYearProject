@@ -119,17 +119,26 @@ export default function ProductsPage() {
                   {product.description || "No description available."}
                 </p>
 
-                <div className="flex justify-between items-center mt-4">
-                  <span className="text-2xl font-bold text-blue-600">
-                    ${product.price.toFixed(2)}
-                  </span>
-                  <button
-                    onClick={() => addToCart(product.id)}
-                    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-300"
+                {user || adminUser ? (
+                  <div className="flex justify-between items-center mt-4">
+                    <span className="text-2xl font-bold text-blue-600">
+                      ${product.price.toFixed(2)}
+                    </span>
+                    <button
+                      onClick={() => addToCart(product.id)}
+                      className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-300"
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                ) : (
+                  <p
+                    className="text-center text-red-500 mt-4 text-sm"
+                    onClick={() => router.push("/login")}
                   >
-                    Add to Cart
-                  </button>
-                </div>
+                    Login to Purchase Items and View Whole Sale Prices
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -143,6 +152,8 @@ export default function ProductsPage() {
             Add Products
           </button>
         )}
+
+        {user === "" && null}
 
         {products.length === 0 && (
           <p className="text-center text-gray-500 mt-10">
