@@ -3,9 +3,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation"; // 1. Import useRouter
 import NavigationBar from "../navigation-bar/page";
 
+const STORAGE_KEY = "session_token"; // Optional: Define a key for localStorage
+
 export default function login() {
   const router = useRouter(); // 2. Initialize the router
   const [form, setForm] = useState({ email: "", password: "" });
+  const sessionDuration = 2 * 60 * 1000; // 1 minute in milliseconds
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,10 +22,16 @@ export default function login() {
     try {
       if (res.ok) {
         // 3. Success! Store user data and Redirect
+        const expirationTime = new Date().getTime() + sessionDuration;
+        localStorage.setItem(STORAGE_KEY, expirationTime.toString());
+        alert(
+          "Session token stored with expiration time: " +
+            new Date(expirationTime).toLocaleTimeString(),
+        );
         alert("login successful");
 
         // Optional: Save the username/token to localStorage so the Dashboard knows who it is
-        localStorage.setItem("username", data.username);
+        localStorage.setItem("username", data.username); // You can store the username or token as needed
 
         localStorage.setItem("user_id", data.id);
 
