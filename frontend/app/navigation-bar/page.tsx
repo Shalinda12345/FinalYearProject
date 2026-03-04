@@ -3,10 +3,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+const STORAGE_KEY = "session_token";
+
 export default function NavigationBar() {
   const [user, setUser] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
+  const [isSessionExpired, setIsSessionExpired] = useState(false);
 
   useEffect(() => {
     // Check if user is logged in
@@ -23,9 +26,38 @@ export default function NavigationBar() {
     }
   }, []);
 
+  useEffect(() => {
+    const sessionToken = localStorage.getItem(STORAGE_KEY);
+    const now = Date.now();
+
+    if (!sessionToken || now > Number(sessionToken)) {
+      setIsSessionExpired(true);
+      if (
+        localStorage.getItem("username") ||
+        localStorage.getItem("admin_user")
+      ) {
+        handleLogout();
+      } else {
+        console.log("No session token found. Please log in.");
+      }
+    } else {
+      const remaining = Number(sessionToken) - now;
+      console.log(
+        "Session expires in: " +
+          Math.floor(remaining / 1000 / 60) +
+          " Minute(s) " +
+          Math.round(
+            remaining / 1000 - Math.floor(remaining / 1000 / 60) * 60,
+          ) +
+          " seconds",
+      );
+    }
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("username");
     localStorage.removeItem("admin_user");
+    localStorage.removeItem(STORAGE_KEY);
     setUser("");
     setIsLoggedIn(false);
     router.push("/login");
