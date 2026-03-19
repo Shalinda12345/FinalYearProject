@@ -1,15 +1,17 @@
 "use client";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import NavigationBar from "../../navigation-bar/page";
+import { PackagePlus, Boxes, ClipboardList, TrendingUp } from "lucide-react";
 
 export default function AdminDashboard() {
   const [user, setUser] = useState("");
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [users, setUsers] = useState([]);
-  const [revenue, setRevenue] = useState(0);
+  const [summary, setSummary] = useState<Summary | null>(null);
+  const [monthlyRevenue, setMonthlyRevenue] = useState<MonthlyTotal[]>([]);
+  const [monthlyForecast, setMonthlyForecast] = useState<MonthlyTotal[]>([]);
 
   type Product = {
     id: number;
@@ -25,8 +27,16 @@ export default function AdminDashboard() {
     created_at: string;
   };
 
+  type Summary = {
+    total_products: number;
+    total_orders: number;
+    total_users: number;
+    total_revenue: number;
+    avg_order_value: number;
+  };
+
   type MonthlyTotal = {
-    month: string; // YYYY-MM
+    month: string;
     label: string;
     amount: number;
   };
@@ -40,8 +50,9 @@ export default function AdminDashboard() {
     }
     fetchProducts();
     fetchOrders();
-    fetchUsers();
-    fetchRevenue();
+    fetchSummary();
+    fetchMonthlyRevenue();
+    fetchMonthlyForecast();
   }, [router]);
 
   const fetchProducts = async () => {
@@ -50,47 +61,77 @@ export default function AdminDashboard() {
         cache: "no-store",
       });
       const data = await res.json();
-      console.log("Fetched Products:", data);
       setProducts(data);
     } catch (error) {
       console.error("Failed to fetch products", error);
     }
   };
 
-  // Aggregate orders into monthly totals (x axis = month, y axis = amount)
-  const monthlyTotals: MonthlyTotal[] = useMemo(() => {
-    const map = new Map<string, number>();
-    orders.forEach((order) => {
-      if (!order?.created_at) return;
-      const d = new Date(order.created_at);
-      if (isNaN(d.getTime())) return;
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; // e.g. 2026-02
-      const prev = map.get(key) || 0;
-      map.set(key, prev + (order.total_amount || 0));
-    });
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:8000/orders/", {
+        cache: "no-store",
+      });
+      const data = await res.json();
+      setOrders(data);
+    } catch (error) {
+      console.error("Failed to fetch orders", error);
+    }
+  };
 
-    const arr: MonthlyTotal[] = Array.from(map.entries()).map(
-      ([key, amount]) => {
-        const [year, month] = key.split("-").map(Number);
-        const date = new Date(year, month - 1, 1);
-        const label = date.toLocaleString(undefined, {
-          month: "short",
-          year: "numeric",
-        });
-        return { month: key, label, amount };
-      },
-    );
+  const fetchSummary = async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:8000/analytics/summary", {
+        cache: "no-store",
+      });
+      const data = await res.json();
+      setSummary(data);
+    } catch (error) {
+      console.error("Failed to fetch summary", error);
+    }
+  };
 
-    arr.sort((a, b) => {
-      const ad = new Date(a.month + "-01");
-      const bd = new Date(b.month + "-01");
-      return ad.getTime() - bd.getTime();
-    });
+  const fetchMonthlyRevenue = async () => {
+    try {
+      const res = await fetch(
+        "http://127.0.0.1:8000/analytics/monthly-revenue",
+        {
+          cache: "no-store",
+        },
+      );
+      const data = await res.json();
+      setMonthlyRevenue(data);
+    } catch (error) {
+      console.error("Failed to fetch monthly revenue", error);
+    }
+  };
 
-    return arr;
-  }, [orders]);
+  const fetchMonthlyForecast = async () => {
+    try {
+      const res = await fetch(
+        "http://127.0.0.1:8000/analytics/forecast-monthly?months=6",
+        {
+          cache: "no-store",
+        },
+      );
+      const data = await res.json();
+      setMonthlyForecast(data);
+    } catch (error) {
+      console.error("Failed to fetch monthly forecast", error);
+    }
+  };
 
-  function MonthlyRevenueChart({ data }: { data: MonthlyTotal[] }) {
+  function MonthlyLineChart({
+    data,
+    stroke,
+    fill,
+    dashed = false,
+  }: {
+    data: MonthlyTotal[];
+    stroke: string;
+    fill: string;
+    dashed?: boolean;
+  }) {
     if (!data || data.length === 0) {
       return <p className="text-gray-600">No monthly data available.</p>;
     }
@@ -116,7 +157,6 @@ export default function AdminDashboard() {
     return (
       <div className="overflow-x-auto">
         <svg width={width} height={height}>
-          {/* grid + y labels */}
           {yTicks.map((tick, i) => (
             <g key={i}>
               <line
@@ -138,37 +178,28 @@ export default function AdminDashboard() {
             </g>
           ))}
 
-          {/* line path */}
           <path
             d={pathD}
             fill="none"
-            stroke="#3B82F6"
+            stroke={stroke}
             strokeWidth={3}
             strokeLinejoin="round"
             strokeLinecap="round"
+            strokeDasharray={dashed ? "6 4" : undefined}
           />
 
-          {/* area under line (subtle) */}
           <path
             d={`${pathD} L ${padding.left + innerWidth},${padding.top + innerHeight} L ${padding.left},${padding.top + innerHeight} Z`}
-            fill="#3B82F6"
+            fill={fill}
             opacity={0.08}
           />
 
-          {/* points and labels */}
           {data.map((d, i) => {
             const cx = getX(i);
             const cy = getY(d.amount);
             return (
               <g key={d.month}>
-                <circle
-                  cx={cx}
-                  cy={cy}
-                  r={4}
-                  fill="#3B82F6"
-                  stroke="#fff"
-                  strokeWidth={1}
-                />
+                <circle cx={cx} cy={cy} r={4} fill={stroke} stroke="#fff" strokeWidth={1} />
                 <text
                   x={cx}
                   y={cy - 10}
@@ -195,93 +226,66 @@ export default function AdminDashboard() {
     );
   }
 
-  const fetchOrders = async () => {
-    try {
-      const res = await fetch("http://127.0.0.1:8000/orders/", {
-        cache: "no-store",
-      });
-      const data = await res.json();
-      console.log("Fetched Orders:", data);
-      setOrders(data);
-    } catch (error) {
-      console.error("Failed to fetch orders", error);
-    }
-  };
-
-  const fetchUsers = async () => {
-    try {
-      const res = await fetch("http://127.0.0.1:8000/users/", {
-        cache: "no-store",
-      });
-      const data = await res.json();
-      console.log("Fetched Users:", data);
-      setUsers(data);
-    } catch (error) {
-      console.error("Failed to fetch users", error);
-    }
-  };
-
-  const fetchRevenue = async () => {
-    try {
-      const res = await fetch("http://127.0.0.1:8000/orders/", {
-        cache: "no-store",
-      });
-      // const data = await res.json();
-      // console.log("Fetched Revenue:", data);
-
-      const allData: Order[] = await res.json();
-
-      // 3. THE CRITICAL STEP: Extract the column
-      // This creates a new array containing ONLY the emails
-      const totalAmount = allData.map((order) => order.total_amount);
-      console.log("Extracted Total Amounts:", totalAmount);
-
-      const totalRevenue = totalAmount.reduce((sum, amount) => sum + amount, 0);
-      setRevenue(totalRevenue);
-    } catch (error) {
-      console.error("Failed to fetch revenue", error);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <NavigationBar />
       <div className="ml-10 mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
         <p className="text-gray-600 mt-2">
-          Welcome back {user}! Here is your Business Overview
+          Welcome back {user}! Here is your business overview.
         </p>
       </div>
 
-      {/* Stat Cards */}
       <div className="ml-10 mr-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <p className="text-gray-500">Total Products</p>
-          <p className="text-gray-500 text-2xl font-bold">{products.length}</p>
+          <p className="text-gray-500 text-2xl font-bold">
+            {summary?.total_products ?? products.length}
+          </p>
         </div>
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <p className="text-gray-500">Total Orders</p>
-          <p className="text-gray-500 text-2xl font-bold">{orders.length}</p>
+          <p className="text-gray-500 text-2xl font-bold">
+            {summary?.total_orders ?? orders.length}
+          </p>
         </div>
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <p className="text-gray-500">Total Users</p>
-          <p className="text-gray-500 text-2xl font-bold">{users.length}</p>
+          <p className="text-gray-500 text-2xl font-bold">
+            {summary?.total_users ?? 0}
+          </p>
         </div>
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <p className="text-gray-500">Total Revenue</p>
-          <p className="text-gray-500 text-2xl font-bold">{revenue}</p>
+          <p className="text-gray-500 text-2xl font-bold">
+            {summary?.total_revenue ?? 0}
+          </p>
         </div>
       </div>
 
-      {/* Monthly Revenue Chart */}
       <div className="ml-10 mr-10 mb-8 bg-white rounded-lg p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4">
           Monthly Revenue
         </h2>
-        <MonthlyRevenueChart data={monthlyTotals} />
+        <MonthlyLineChart
+          data={monthlyRevenue}
+          stroke="#0EA5A4"
+          fill="#0EA5A4"
+        />
       </div>
 
-      {/* Main Content */}
+      <div className="ml-10 mr-10 mb-8 bg-white rounded-lg p-6">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">
+          6-Month Sales Forecast
+        </h2>
+        <MonthlyLineChart
+          data={monthlyForecast}
+          stroke="#F59E0B"
+          fill="#F59E0B"
+          dashed
+        />
+      </div>
+
       <div className="ml-10 grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <div className="lg:col-span-2 bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-4">
@@ -291,7 +295,7 @@ export default function AdminDashboard() {
               onClick={() => router.push("/admin/add-products")}
               className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
             >
-              + Add Products
+              Add Products
             </button>
           </div>
 
@@ -344,19 +348,25 @@ export default function AdminDashboard() {
               onClick={() => router.push("/admin/add-products")}
               className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2"
             >
-              <span>➕</span> Add Product
+              <PackagePlus className="h-4 w-4" /> Add Product
             </button>
             <button
               onClick={() => router.push("/admin/products")}
               className="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2"
             >
-              <span>📋</span> View All Products
+              <Boxes className="h-4 w-4" /> View All Products
             </button>
             <button
               onClick={() => router.push("/admin/orders")}
               className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2"
             >
-              <span>👥</span> View Orders
+              <ClipboardList className="h-4 w-4" /> View Orders
+            </button>
+            <button
+              onClick={() => router.push("/admin/analytics")}
+              className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2"
+            >
+              <TrendingUp className="h-4 w-4" /> Sales Analytics
             </button>
           </div>
         </div>
@@ -404,7 +414,7 @@ export default function AdminDashboard() {
                         {order.total_amount}
                       </td>
                       <td className="px-4 py-3 font-medium text-gray-500">
-                        {order.created_at}
+                        {new Date(order.created_at).toLocaleString()}
                       </td>
                     </tr>
                   ))}

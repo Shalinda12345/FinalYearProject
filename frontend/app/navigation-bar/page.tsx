@@ -2,12 +2,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { ShoppingCart, UserRound } from "lucide-react";
 
 const STORAGE_KEY = "session_token";
 
 export default function NavigationBar() {
   const [user, setUser] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
   const [isSessionExpired, setIsSessionExpired] = useState(false);
 
@@ -18,11 +20,14 @@ export default function NavigationBar() {
     if (storedUser) {
       setUser(storedUser);
       setIsLoggedIn(true);
+      setIsAdmin(false);
     } else if (adminUser) {
       setUser(adminUser);
       setIsLoggedIn(true);
+      setIsAdmin(true);
     } else {
       setIsLoggedIn(false);
+      setIsAdmin(false);
     }
   }, []);
 
@@ -64,7 +69,7 @@ export default function NavigationBar() {
   };
 
   const clickUser = () => {
-    if (user === "admin") {
+    if (isAdmin) {
       router.push("/admin/admin-dashboard");
     } else {
       router.push("/client-dashboard");
@@ -72,88 +77,81 @@ export default function NavigationBar() {
   };
 
   return (
-    <nav className="w-full border-b border-zinc-200 bg-linear-to-r from-white to-zinc-50 dark:from-zinc-900 dark:to-black dark:border-zinc-800 shadow-sm">
-      <ul className="mx-auto flex max-w-7xl items-center gap-8 px-4 py-5 text-sm font-medium sm:px-8">
-        <li>
-          <a
-            href="/"
-            className="relative text-zinc-700 transition-all duration-300 hover:text-blue-600 dark:text-zinc-200 dark:hover:text-blue-400 hover:font-semibold"
-          >
-            Home
-          </a>
-        </li>
-        <li>
-          <a
-            href="/products"
-            className="relative text-zinc-700 transition-all duration-300 hover:text-blue-600 dark:text-zinc-200 dark:hover:text-blue-400 hover:font-semibold"
-          >
-            Our Products
-          </a>
-        </li>
-        <li>
-          <a
-            href="/about"
-            className="relative text-zinc-700 transition-all duration-300 hover:text-blue-600 dark:text-zinc-200 dark:hover:text-blue-400 hover:font-semibold"
-          >
-            About Us
-          </a>
-        </li>
-        <li>
-          <a
-            href="/contact"
-            className="relative text-zinc-700 transition-all duration-300 hover:text-blue-600 dark:text-zinc-200 dark:hover:text-blue-400 hover:font-semibold"
-          >
-            Contact Us
-          </a>
-        </li>
-        <li className="ml-auto">
+    <nav className="w-full border-b border-slate-200 bg-white/80 backdrop-blur">
+      <div className="mx-auto flex max-w-7xl items-center gap-8 px-4 py-5 text-sm font-medium sm:px-8">
+        <a
+          href="/"
+          className="text-xl font-semibold text-slate-900 tracking-tight font-[var(--font-display)]"
+        >
+          Heshan Products
+        </a>
+        <a
+          href="/"
+          className="relative text-slate-700 transition-all duration-300 hover:text-teal-700 hover:font-semibold"
+        >
+          Home
+        </a>
+        <a
+          href="/products"
+          className="relative text-slate-700 transition-all duration-300 hover:text-teal-700 hover:font-semibold"
+        >
+          Our Products
+        </a>
+        <a
+          href="/about"
+          className="relative text-slate-700 transition-all duration-300 hover:text-teal-700 hover:font-semibold"
+        >
+          About Us
+        </a>
+        <a
+          href="/contact"
+          className="relative text-slate-700 transition-all duration-300 hover:text-teal-700 hover:font-semibold"
+        >
+          Contact Us
+        </a>
+        <div className="ml-auto">
           {isLoggedIn ? (
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
               <a
                 href="/cart"
-                className="px-6 py-2 rounded-lg text-zinc-700 dark:text-zinc-200 border-2 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all duration-300 font-semibold hover:border-blue-600"
+                className="flex items-center gap-2 rounded-lg border border-teal-200 px-4 py-2 text-slate-700 transition-all duration-300 hover:border-teal-400 hover:bg-teal-50"
               >
-                🛒
+                <ShoppingCart className="h-4 w-4" />
+                Cart
               </a>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
-                <a
-                  href="#"
-                  onClick={clickUser}
-                  className="text-zinc-800 dark:text-zinc-100 font-semibold transition-all duration-300 hover:text-blue-600 dark:hover:text-blue-400"
-                >
-                  <span className="text-sm text-blue-900 dark:text-blue-200">
-                    👤
-                  </span>
-                  <span className="text-zinc-800 dark:text-zinc-100 font-semibold">
-                    {user}
-                  </span>
-                </a>
-              </div>
+              <button
+                type="button"
+                onClick={clickUser}
+                className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-slate-700 transition-all duration-300 hover:border-teal-400 hover:text-teal-700"
+              >
+                <UserRound className="h-4 w-4" />
+                {user}
+              </button>
               <button
                 onClick={handleLogout}
-                className="px-6 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+                className="rounded-lg bg-slate-900 px-4 py-2 text-white transition-all duration-300 hover:bg-slate-800"
               >
                 Logout
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <a
                 href="/login"
-                className="px-6 py-2 rounded-lg text-zinc-700 dark:text-zinc-200 border-2 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all duration-300 font-semibold hover:border-blue-600"
+                className="rounded-lg border border-slate-200 px-4 py-2 text-slate-700 transition-all duration-300 hover:border-teal-400 hover:text-teal-700"
               >
                 Login
               </a>
               <a
                 href="/register"
-                className="px-6 py-2 rounded-lg bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+                className="rounded-lg bg-teal-600 px-4 py-2 text-white transition-all duration-300 hover:bg-teal-700"
               >
                 Register
               </a>
             </div>
           )}
-        </li>
-      </ul>
+        </div>
+      </div>
     </nav>
   );
 }
