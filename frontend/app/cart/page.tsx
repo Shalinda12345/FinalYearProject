@@ -249,7 +249,7 @@ export default function CartPage() {
                               }
                               className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded font-semibold"
                             >
-                              −
+                              -
                             </button>
                             <input
                               type="number"

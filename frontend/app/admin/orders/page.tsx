@@ -7,6 +7,7 @@ import Pagination from "../components/pagination/page";
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState<any[]>([]);
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(orders.length / itemsPerPage);
@@ -16,8 +17,13 @@ const OrdersPage = () => {
   const currentOrders = orders.slice(startIndex, endIndex);
 
   useEffect(() => {
+    const adminUser = localStorage.getItem("admin_user");
+    if (!adminUser) {
+      router.push("/admin/login");
+      return;
+    }
     fetchOrders();
-  }, []);
+  }, [router]);
 
   const fetchOrders = async () => {
     try {

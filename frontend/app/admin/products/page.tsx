@@ -7,6 +7,7 @@ import Pagination from "../components/pagination/page";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState<any[]>([]);
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(products.length / itemsPerPage);
@@ -21,8 +22,13 @@ const ProductsPage = () => {
   const currentProducts = products.slice(startIndex, endIndex);
 
   useEffect(() => {
+    const adminUser = localStorage.getItem("admin_user");
+    if (!adminUser) {
+      router.push("/admin/login");
+      return;
+    }
     fetchProducts();
-  }, []);
+  }, [router]);
 
   const fetchProducts = async () => {
     try {
@@ -84,6 +90,26 @@ const ProductsPage = () => {
       setError(e.message || "Failed to save");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const deleteProduct = async (productId: number) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this product?",
+    );
+    if (!confirmed) return;
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/products/${productId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || "Failed to delete product");
+      }
+      setProducts((prev) => prev.filter((p) => p.id !== productId));
+    } catch (e: any) {
+      console.error(e);
+      setError(e.message || "Delete failed");
     }
   };
 
@@ -206,12 +232,20 @@ const ProductsPage = () => {
                         </button>
                       </div>
                     ) : (
-                      <button
-                        onClick={() => startEditing(product)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
-                      >
-                        Edit
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => startEditing(product)}
+                          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => deleteProduct(product.id)}
+                          className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     )}
                     {editingId === product.id && error && (
                       <div className="text-red-500 text-sm mt-1">{error}</div>
