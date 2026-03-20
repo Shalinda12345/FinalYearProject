@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import NavigationBar from "../../navigation-bar/page";
+import NavigationBar from "@/components/layout/NavigationBar";
 
 const STORAGE_KEY = "session_token";
 
@@ -12,25 +12,26 @@ export default function AdminLogin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("http://127.0.0.1:8000/admin/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    const data = await res.json();
+    try {
+      const res = await fetch("http://127.0.0.1:8000/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      
+      const data = await res.json();
 
-    if (res.ok) {
-      const expirationTime = new Date().getTime() + sessionDuration;
-      localStorage.setItem(STORAGE_KEY, expirationTime.toString());
-      alert(
-        "Session token stored with expiration time: " +
-          new Date(expirationTime).toLocaleTimeString(),
-      );
-      alert("login successful");
-      localStorage.setItem("admin_user", data.admin_user);
-      router.push("/admin/admin-dashboard");
-    } else {
-      alert("Access Denied!");
+      if (res.ok) {
+        localStorage.setItem(STORAGE_KEY, data.access_token);
+        alert("login successful");
+        localStorage.setItem("admin_user", data.admin_user);
+        router.push("/admin/admin-dashboard");
+      } else {
+        alert("Access Denied! " + (data.detail || "Invalid credentials"));
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert("Network Error: Could not reach the backend. " + err.message);
     }
   };
 

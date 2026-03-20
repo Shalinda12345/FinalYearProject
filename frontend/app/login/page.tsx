@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import NavigationBar from "../navigation-bar/page";
+import NavigationBar from "@/components/layout/NavigationBar";
 
 const STORAGE_KEY = "session_token";
 
@@ -21,12 +21,7 @@ export default function Login() {
 
     try {
       if (res.ok) {
-        const expirationTime = new Date().getTime() + sessionDuration;
-        localStorage.setItem(STORAGE_KEY, expirationTime.toString());
-        alert(
-          "Session token stored with expiration time: " +
-            new Date(expirationTime).toLocaleTimeString(),
-        );
+        localStorage.setItem(STORAGE_KEY, data.access_token);
         alert("login successful");
 
         localStorage.setItem("username", data.username);

@@ -1,14 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import NavigationBar from "../navigation-bar/page";
+import NavigationBar from "@/components/layout/NavigationBar";
 
 export default function ContactPage() {
   const [status, setStatus] = useState("");
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setStatus("Thanks! We will contact you within one business day.");
+    const target = event.target as any;
+    const data = {
+      name: target[0].value,
+      email: target[1].value,
+      message: target[2].value
+    };
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        setStatus("Thanks! We will contact you within one business day.");
+        target.reset();
+      } else {
+        setStatus("Failed to send message. Please try again later.");
+      }
+    } catch {
+      setStatus("Network error.");
+    }
   };
 
   return (

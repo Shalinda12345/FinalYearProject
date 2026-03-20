@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import NavigationBar from "../navigation-bar/page";
+import NavigationBar from "@/components/layout/NavigationBar";
 
 // Define what a Product looks like in TypeScript
 interface Product {
@@ -57,7 +57,9 @@ export default function ProductsPage() {
 
   const addToCart = async (productId: number) => {
     const storedUserId = localStorage.getItem("user_id");
-    if (!storedUserId) {
+    const token = localStorage.getItem("session_token");
+    
+    if (!storedUserId || !token) {
       alert("User not logged in!");
       return;
     }
@@ -68,14 +70,26 @@ export default function ProductsPage() {
       quantity: 1,
     };
 
-    await fetch("http://127.0.0.1:8000/cart", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-    alert("Product added to cart!");
+    try {
+      const res = await fetch("http://127.0.0.1:8000/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        alert("Product added to cart!");
+      } else {
+        const err = await res.json();
+        alert("Failed to add to cart: " + (err.detail || "Unauthorized"));
+      }
+    } catch (error) {
+      console.error("Cart error:", error);
+      alert("Error adding to cart");
+    }
   };
 
   return (
@@ -122,7 +136,7 @@ export default function ProductsPage() {
                 {user || adminUser ? (
                   <div className="flex justify-between items-center mt-4">
                     <span className="text-2xl font-bold text-blue-600">
-                      ${product.price.toFixed(2)}
+                      Rs. {product.price.toFixed(2)}
                     </span>
                     <button
                       onClick={() => addToCart(product.id)}

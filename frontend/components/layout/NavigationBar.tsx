@@ -35,7 +35,7 @@ export default function NavigationBar() {
     const sessionToken = localStorage.getItem(STORAGE_KEY);
     const now = Date.now();
 
-    if (!sessionToken || now > Number(sessionToken)) {
+    if (!sessionToken) {
       setIsSessionExpired(true);
       if (
         localStorage.getItem("username") ||
@@ -46,16 +46,24 @@ export default function NavigationBar() {
         console.log("No session token found. Please log in.");
       }
     } else {
-      const remaining = Number(sessionToken) - now;
-      console.log(
-        "Session expires in: " +
-          Math.floor(remaining / 1000 / 60) +
-          " Minute(s) " +
-          Math.round(
-            remaining / 1000 - Math.floor(remaining / 1000 / 60) * 60,
-          ) +
-          " seconds",
-      );
+      try {
+        const payloadBase64 = sessionToken.split('.')[1];
+        if (payloadBase64) {
+          const payload = JSON.parse(atob(payloadBase64));
+          const exp = payload.exp * 1000;
+          if (now > exp) {
+            console.log("JWT Session expired!");
+            handleLogout();
+          } else {
+            console.log("Session remains valid for", Math.floor((exp - now)/60000), "minutes");
+          }
+        }
+      } catch (e) {
+        // Fallback for old tokens
+        if (!isNaN(Number(sessionToken)) && now > Number(sessionToken)) {
+          handleLogout();
+        }
+      }
     }
   }, []);
 

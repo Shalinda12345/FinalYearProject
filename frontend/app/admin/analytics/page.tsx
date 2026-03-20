@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import NavigationBar from "../../navigation-bar/page";
+import NavigationBar from "@/components/layout/NavigationBar";
 
 type Summary = {
   total_products: number;
