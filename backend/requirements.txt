@@ -7,3 +7,6 @@ argon2-cffi
 pydantic
 email-validator
 python-multipart
+pandas
+prophet
+python-jose[cryptography]
