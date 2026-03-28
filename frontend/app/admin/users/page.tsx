@@ -2,12 +2,15 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/layout/NavigationBar";
-import { Trash2 } from "lucide-react";
+import { Trash2, Edit2, Check, X } from "lucide-react";
 
 export default function ManageUsers() {
   const [adminUser, setAdminUser] = useState("");
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
+  const [editingUserId, setEditingUserId] = useState<number | null>(null);
+  const [editUsername, setEditUsername] = useState("");
+  const [editEmail, setEditEmail] = useState("");
 
   type User = {
     id: number;
@@ -54,6 +57,30 @@ export default function ManageUsers() {
     }
   };
 
+  const saveUser = async (userId: number) => {
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/users/${userId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: editUsername, email: editEmail }),
+      });
+      if (res.ok) {
+        setUsers(
+          users.map((u) =>
+            u.id === userId ? { ...u, username: editUsername, email: editEmail } : u
+          )
+        );
+        setEditingUserId(null);
+      } else {
+        const errorData = await res.json();
+        alert(errorData.detail || "Failed to update user");
+      }
+    } catch (error) {
+      console.error("Failed to update user", error);
+      alert("An error occurred while updating the user.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <NavigationBar />
@@ -83,19 +110,73 @@ export default function ManageUsers() {
                   className="border-b border-gray-100 hover:bg-gray-50 transition"
                 >
                   <td className="px-6 py-4 font-medium text-gray-900">{user.id}</td>
-                  <td className="px-6 py-4 font-medium text-gray-900">{user.username}</td>
-                  <td className="px-6 py-4 text-gray-600">{user.email}</td>
+                  <td className="px-6 py-4 font-medium text-gray-900">
+                    {editingUserId === user.id ? (
+                      <input
+                        type="text"
+                        className="border border-gray-300 rounded px-2 py-1 w-full font-normal"
+                        value={editUsername}
+                        onChange={(e) => setEditUsername(e.target.value)}
+                      />
+                    ) : (
+                      user.username
+                    )}
+                  </td>
+                  <td className="px-6 py-4 text-gray-600">
+                    {editingUserId === user.id ? (
+                      <input
+                        type="email"
+                        className="border border-gray-300 rounded px-2 py-1 w-full"
+                        value={editEmail}
+                        onChange={(e) => setEditEmail(e.target.value)}
+                      />
+                    ) : (
+                      user.email
+                    )}
+                  </td>
                   <td className="px-6 py-4 text-gray-500">
                     {new Date(user.created_at).toLocaleString()}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button
-                      onClick={() => deleteUser(user.id)}
-                      className="text-red-500 hover:text-red-700 transition"
-                      title="Delete User"
-                    >
-                      <Trash2 className="h-5 w-5 inline" />
-                    </button>
+                    {editingUserId === user.id ? (
+                      <div className="flex justify-end gap-3">
+                        <button
+                          onClick={() => saveUser(user.id)}
+                          className="text-emerald-500 hover:text-emerald-700 transition"
+                          title="Save User"
+                        >
+                          <Check className="h-5 w-5 inline" />
+                        </button>
+                        <button
+                          onClick={() => setEditingUserId(null)}
+                          className="text-gray-400 hover:text-gray-600 transition"
+                          title="Cancel"
+                        >
+                          <X className="h-5 w-5 inline" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex justify-end gap-3">
+                        <button
+                          onClick={() => {
+                            setEditingUserId(user.id);
+                            setEditUsername(user.username);
+                            setEditEmail(user.email);
+                          }}
+                          className="text-indigo-500 hover:text-indigo-700 transition"
+                          title="Edit User"
+                        >
+                          <Edit2 className="h-5 w-5 inline" />
+                        </button>
+                        <button
+                          onClick={() => deleteUser(user.id)}
+                          className="text-red-500 hover:text-red-700 transition"
+                          title="Delete User"
+                        >
+                          <Trash2 className="h-5 w-5 inline" />
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}

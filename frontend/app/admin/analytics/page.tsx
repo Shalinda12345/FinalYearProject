@@ -2,6 +2,31 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/layout/NavigationBar";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Filler,
+  Legend,
+} from 'chart.js';
+import { Line, Bar } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Filler,
+  Legend
+);
 
 type Summary = {
   total_products: number;
@@ -57,33 +82,50 @@ function LineChart({
     return <p className="text-sm text-slate-500">No data available.</p>;
   }
 
-  const height = 220;
-  const width = Math.max(560, data.length * 60);
-  const padding = { top: 20, right: 20, bottom: 40, left: 50 };
-  const innerWidth = width - padding.left - padding.right;
-  const innerHeight = height - padding.top - padding.bottom;
-  const max = Math.max(...data.map((d) => Number(d[valueKey]) || 0), 1);
+  const labels = data.map((d) => d.label || d.date || d.month || "Unknown");
+  const values = data.map((d) => Number(d[valueKey]) || 0);
 
-  const band = innerWidth / data.length;
-  const getX = (i: number) => padding.left + i * band + band / 2;
-  const getY = (value: number) =>
-    padding.top + innerHeight - (value / max) * innerHeight;
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: valueKey === "amount" ? "Revenue" : "Sales",
+        data: values,
+        borderColor: color,
+        backgroundColor: `${color}33`,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: color,
+      },
+    ],
+  };
 
-  const pathD = data
-    .map((d, i) => `${i === 0 ? "M" : "L"}${getX(i)},${getY(d[valueKey])}`)
-    .join(" ");
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => `Rs. ${context.parsed.y.toLocaleString()}`,
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: "#64748b", maxRotation: 45, minRotation: 0 },
+      },
+      y: {
+        border: { display: false },
+        ticks: { color: "#64748b" },
+      },
+    },
+  };
 
   return (
-    <div className="overflow-x-auto">
-      <svg width={width} height={height}>
-        <path
-          d={pathD}
-          fill="none"
-          stroke={color}
-          strokeWidth={3}
-          strokeLinecap="round"
-        />
-      </svg>
+    <div className="h-[300px] w-full">
+      <Line data={chartData} options={options} />
     </div>
   );
 }
@@ -93,52 +135,50 @@ function BarChart({ data }: { data: TopProduct[] }) {
     return <p className="text-sm text-slate-500">No data available.</p>;
   }
 
-  const max = Math.max(...data.map((d) => d.revenue), 1);
-  const widthClasses = [
-    "w-[0%]",
-    "w-[5%]",
-    "w-[10%]",
-    "w-[15%]",
-    "w-[20%]",
-    "w-[25%]",
-    "w-[30%]",
-    "w-[35%]",
-    "w-[40%]",
-    "w-[45%]",
-    "w-[50%]",
-    "w-[55%]",
-    "w-[60%]",
-    "w-[65%]",
-    "w-[70%]",
-    "w-[75%]",
-    "w-[80%]",
-    "w-[85%]",
-    "w-[90%]",
-    "w-[95%]",
-    "w-[100%]",
-  ];
+  const labels = data.map((d) => d.name);
+  const values = data.map((d) => d.revenue);
+
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: "Revenue",
+        data: values,
+        backgroundColor: "#14b8a6",
+        borderRadius: 4,
+      },
+    ],
+  };
+
+  const options = {
+    indexAxis: "y" as const,
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => `Rs. ${context.parsed.x.toLocaleString()}`,
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { color: "#f1f5f9" },
+        border: { display: false },
+        ticks: { color: "#64748b" },
+      },
+      y: {
+        grid: { display: false },
+        border: { display: false },
+        ticks: { color: "#334155", font: { weight: 500 } },
+      },
+    },
+  };
 
   return (
-    <div className="space-y-3">
-      {data.map((item) => {
-        const percent = Math.max(0, Math.min(100, (item.revenue / max) * 100));
-        const idx = Math.min(
-          widthClasses.length - 1,
-          Math.round(percent / 5),
-        );
-        return (
-        <div key={item.product_id} className="space-y-1">
-          <div className="flex justify-between text-sm">
-            <span className="font-medium text-slate-700">{item.name}</span>
-            <span className="text-slate-500">{item.revenue.toFixed(2)}</span>
-          </div>
-          <div className="h-2 w-full rounded-full bg-slate-100">
-            <div
-              className={`h-2 rounded-full bg-teal-500 ${widthClasses[idx]}`}
-            />
-          </div>
-        </div>
-      )})}
+    <div className="h-[300px] w-full">
+      <Bar data={chartData} options={options as any} />
     </div>
   );
 }
@@ -149,54 +189,78 @@ function ForecastChart({ history, forecast }: ForecastResponse) {
   }
 
   const recentHistory = history.slice(-14);
-  const combined = [...recentHistory, ...forecast];
-  const height = 240;
-  const width = Math.max(560, combined.length * 60);
-  const padding = { top: 20, right: 20, bottom: 40, left: 50 };
-  const innerWidth = width - padding.left - padding.right;
-  const innerHeight = height - padding.top - padding.bottom;
-  const max = Math.max(
-    ...combined.map((d) =>
-      "predicted" in d ? Number(d.predicted) : Number(d.total),
+  const labels = [
+    ...recentHistory.map((d) => d.date),
+    ...forecast.map((d) => d.date),
+  ];
+
+  const historyData = [
+    ...recentHistory.map((d) => d.total),
+    ...forecast.map(() => null),
+  ];
+
+  const lastHistoryValue = recentHistory[recentHistory.length - 1]?.total || 0;
+
+  const forecastData = [
+    ...recentHistory.map((_, i) =>
+      i === recentHistory.length - 1 ? lastHistoryValue : null
     ),
-    1,
-  );
+    ...forecast.map((d) => d.predicted),
+  ];
 
-  const band = innerWidth / combined.length;
-  const getX = (i: number) => padding.left + i * band + band / 2;
-  const getY = (value: number) =>
-    padding.top + innerHeight - (value / max) * innerHeight;
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: "Historical Sales",
+        data: historyData,
+        borderColor: "#0ea5a4",
+        backgroundColor: "transparent",
+        tension: 0.4,
+        pointBackgroundColor: "#0ea5a4",
+      },
+      {
+        label: "Forecast",
+        data: forecastData,
+        borderColor: "#f59e0b",
+        backgroundColor: "transparent",
+        borderDash: [6, 4],
+        tension: 0.4,
+        pointBackgroundColor: "#f59e0b",
+        pointStyle: "rectRot",
+      },
+    ],
+  };
 
-  const historyPath = recentHistory
-    .map((d, i) => `${i === 0 ? "M" : "L"}${getX(i)},${getY(d.total)}`)
-    .join(" ");
-
-  const forecastPath = forecast
-    .map((d, i) => {
-      const idx = recentHistory.length + i;
-      return `${i === 0 ? "M" : "L"}${getX(idx)},${getY(d.predicted)}`;
-    })
-    .join(" ");
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: "top" as const },
+      tooltip: {
+        mode: "index" as const,
+        intersect: false,
+        callbacks: {
+          label: (context: any) =>
+            `${context.dataset.label}: Rs. ${context.parsed.y.toLocaleString()}`,
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: "#64748b", maxRotation: 45, minRotation: 0 },
+      },
+      y: {
+        border: { display: false },
+        ticks: { color: "#64748b" },
+      },
+    },
+  };
 
   return (
-    <div className="overflow-x-auto">
-      <svg width={width} height={height}>
-        <path
-          d={historyPath}
-          fill="none"
-          stroke="#0EA5A4"
-          strokeWidth={3}
-          strokeLinecap="round"
-        />
-        <path
-          d={forecastPath}
-          fill="none"
-          stroke="#F59E0B"
-          strokeWidth={3}
-          strokeLinecap="round"
-          strokeDasharray="6 4"
-        />
-      </svg>
+    <div className="h-[300px] w-full">
+      <Line data={chartData} options={options} />
     </div>
   );
 }

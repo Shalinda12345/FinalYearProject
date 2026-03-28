@@ -158,16 +158,14 @@ export default function ProductsPage() {
           ))}
         </div>
 
-        {user === adminUser && (
+        {adminUser ? (
           <button
             onClick={() => router.push("/admin/add-products")}
             className="mt-6 bg-blue-500 text-white p-2 rounded mx-auto block"
           >
             Add Products
           </button>
-        )}
-
-        {user === "" && null}
+        ) : null}
 
         {products.length === 0 && (
           <p className="text-center text-gray-500 mt-10">
