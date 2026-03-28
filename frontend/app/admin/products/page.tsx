@@ -2,8 +2,8 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import NavigationBar from "../../navigation-bar/page";
-import Pagination from "../components/pagination/page";
+import NavigationBar from "@/components/layout/NavigationBar";
+import Pagination from "@/components/admin/Pagination";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState<any[]>([]);

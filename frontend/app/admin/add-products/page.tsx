@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import NavigationBar from "../../navigation-bar/page";
+import NavigationBar from "@/components/layout/NavigationBar";
 
 export default function AddProductsPage() {
   const [form, setForm] = useState({

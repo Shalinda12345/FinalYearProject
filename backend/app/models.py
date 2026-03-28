@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, TIMESTAMP, func, text, DECIMAL, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
-from database import Base
+from .database import Base
 
 class User(Base):
     __tablename__ = "users"
@@ -47,6 +47,7 @@ class Order(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, nullable=False)
     total_amount = Column(DECIMAL(10, 2), nullable=False)
+    delivery_date = Column(String(50), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationship to items
@@ -62,3 +63,13 @@ class OrderItem(Base):
     price = Column(DECIMAL(10, 2), nullable=False) # Price at moment of purchase
 
     order = relationship("Order", back_populates="items")
+
+
+class ContactInquiry(Base):
+    __tablename__ = "contact_inquiries"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(100), nullable=False)
+    email = Column(String(100), nullable=False)
+    message = Column(String(1000), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())

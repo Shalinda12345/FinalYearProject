@@ -1,8 +1,31 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import NavigationBar from "../../navigation-bar/page";
-import { PackagePlus, Boxes, ClipboardList, TrendingUp } from "lucide-react";
+import NavigationBar from "@/components/layout/NavigationBar";
+import { PackagePlus, Boxes, ClipboardList, TrendingUp, Users, Download } from "lucide-react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip as ChartTooltip,
+  Filler,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  ChartTooltip,
+  Filler,
+  Legend
+);
 
 export default function AdminDashboard() {
   const [user, setUser] = useState("");
@@ -136,92 +159,52 @@ export default function AdminDashboard() {
       return <p className="text-gray-600">No monthly data available.</p>;
     }
 
-    const height = 260;
-    const width = Math.max(600, data.length * 80);
-    const padding = { top: 20, right: 20, bottom: 60, left: 60 };
-    const innerWidth = width - padding.left - padding.right;
-    const innerHeight = height - padding.top - padding.bottom;
-    const max = Math.max(...data.map((d) => d.amount), 1);
+    const chartData = {
+      labels: data.map(d => d.label),
+      datasets: [
+        {
+          label: 'Amount (Rs)',
+          data: data.map(d => d.amount),
+          borderColor: stroke,
+          backgroundColor: fill + '33', // 20% opacity hex
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: stroke,
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: stroke,
+          borderDash: dashed ? [6, 4] : [],
+        }
+      ]
+    };
 
-    const band = innerWidth / data.length;
-    const getX = (i: number) => padding.left + i * band + band / 2;
-    const getY = (value: number) =>
-      padding.top + innerHeight - (value / max) * innerHeight;
-
-    const yTicks = [0, Math.round(max / 2), Math.round(max)];
-
-    const pathD = data
-      .map((d, i) => `${i === 0 ? "M" : "L"}${getX(i)},${getY(d.amount)}`)
-      .join(" ");
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (context: any) => `Rs. ${context.parsed.y?.toLocaleString() || 0}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: '#6B7280' }
+        },
+        y: {
+          grid: { color: '#E5E7EB', tickLength: 0 },
+          border: { display: false },
+          ticks: { color: '#6B7280' }
+        }
+      }
+    };
 
     return (
-      <div className="overflow-x-auto">
-        <svg width={width} height={height}>
-          {yTicks.map((tick, i) => (
-            <g key={i}>
-              <line
-                x1={padding.left}
-                x2={width - padding.right}
-                y1={getY(tick)}
-                y2={getY(tick)}
-                stroke="#E5E7EB"
-              />
-              <text
-                x={padding.left - 8}
-                y={getY(tick) + 4}
-                fontSize={12}
-                textAnchor="end"
-                fill="#6B7280"
-              >
-                {String(tick)}
-              </text>
-            </g>
-          ))}
-
-          <path
-            d={pathD}
-            fill="none"
-            stroke={stroke}
-            strokeWidth={3}
-            strokeLinejoin="round"
-            strokeLinecap="round"
-            strokeDasharray={dashed ? "6 4" : undefined}
-          />
-
-          <path
-            d={`${pathD} L ${padding.left + innerWidth},${padding.top + innerHeight} L ${padding.left},${padding.top + innerHeight} Z`}
-            fill={fill}
-            opacity={0.08}
-          />
-
-          {data.map((d, i) => {
-            const cx = getX(i);
-            const cy = getY(d.amount);
-            return (
-              <g key={d.month}>
-                <circle cx={cx} cy={cy} r={4} fill={stroke} stroke="#fff" strokeWidth={1} />
-                <text
-                  x={cx}
-                  y={cy - 10}
-                  fontSize={11}
-                  textAnchor="middle"
-                  fill="#374151"
-                >
-                  {d.amount.toFixed(2)}
-                </text>
-                <text
-                  x={cx}
-                  y={height - 18}
-                  fontSize={12}
-                  textAnchor="middle"
-                  fill="#6B7280"
-                >
-                  {d.label}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
+      <div className="h-[260px] w-full">
+        <Line data={chartData} options={options} />
       </div>
     );
   }
@@ -367,6 +350,20 @@ export default function AdminDashboard() {
               className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2"
             >
               <TrendingUp className="h-4 w-4" /> Sales Analytics
+            </button>
+            <button
+              onClick={() => router.push("/admin/users")}
+              className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2"
+            >
+              <Users className="h-4 w-4" /> Manage Users
+            </button>
+            <button
+              onClick={() => {
+                window.location.href = "http://127.0.0.1:8000/analytics/export-csv";
+              }}
+              className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2"
+            >
+              <Download className="h-4 w-4" /> Export Report (CSV)
             </button>
           </div>
         </div>

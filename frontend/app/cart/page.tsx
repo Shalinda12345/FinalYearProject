@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import NavigationBar from "../navigation-bar/page";
+import NavigationBar from "@/components/layout/NavigationBar";
 
 interface Product {
   id: number;
@@ -21,6 +21,7 @@ export default function CartPage() {
   const [products, setProducts] = useState<Record<number, Product>>({});
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState("");
+  const [deliveryDate, setDeliveryDate] = useState("");
 
   // Fetch cart and products on mount
   useEffect(() => {
@@ -34,9 +35,12 @@ export default function CartPage() {
 
     const fetchData = async () => {
       try {
+        const token = localStorage.getItem("session_token");
+        const headers: HeadersInit = token ? { "Authorization": `Bearer ${token}` } : {};
+        
         // Fetch cart for current user only
         const cartRes = await fetch(
-          `http://127.0.0.1:8000/cart?user_id=${storedUserId}`,
+          `http://127.0.0.1:8000/cart`, { headers }
         );
         const cartItems = await cartRes.json();
         setCart(Array.isArray(cartItems) ? cartItems : []);
@@ -66,10 +70,11 @@ export default function CartPage() {
 
   const removeFromCart = async (productId: number) => {
     try {
-      const storedUserId = localStorage.getItem("user_id");
-      const q = storedUserId ? `?user_id=${storedUserId}` : "";
-      await fetch(`http://127.0.0.1:8000/cart/remove/${productId}${q}`, {
+      const token = localStorage.getItem("session_token");
+      const headers: HeadersInit = token ? { "Authorization": `Bearer ${token}` } : {};
+      await fetch(`http://127.0.0.1:8000/cart/remove/${productId}`, {
         method: "DELETE",
+        headers
       });
       setCart(cart.filter((item) => item.product_id !== productId));
     } catch (error) {
@@ -91,10 +96,12 @@ export default function CartPage() {
         alert("User ID not found. Please Log Out and Log In again.");
         return;
       }
+      const token = localStorage.getItem("session_token");
       const response = await fetch(`http://127.0.0.1:8000/cart/${itemId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
           user_id: parseInt(storedUserId),
@@ -146,18 +153,21 @@ export default function CartPage() {
     const payload = {
       // 3. Convert the string "5" to the number 5
       user_id: parseInt(storedUserId),
+      delivery_date: deliveryDate,
       items: cart.map((item) => ({
         product_id: item.product_id,
         quantity: item.quantity,
         price: products[item.product_id]?.price || 0,
       })),
     };
-
+    console.log(payload);
     try {
+      const token = localStorage.getItem("session_token");
       const response = await fetch("http://localhost:8000/orders/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(payload),
       });
@@ -293,6 +303,10 @@ export default function CartPage() {
 
             <div className="flex justify-end mb-8">
               <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-sm">
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">Delivery Date</label>
+                  <input type="date" value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900" />
+                </div>
                 <div className="flex justify-between mb-4 text-lg font-semibold">
                   <span>Total:</span>
                   <span className="text-blue-600">

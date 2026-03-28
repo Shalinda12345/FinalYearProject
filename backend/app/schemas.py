@@ -52,6 +52,7 @@ class OrderItem(BaseModel):
 
 class OrderCreate(BaseModel):
     user_id: int
+    delivery_date: str | None = None
     items: List[OrderItem] 
     
 
@@ -59,3 +60,12 @@ class Activity(BaseModel):
     id: int
     action: str
     timestamp: str
+
+class ContactCreate(BaseModel):
+    name: str
+    email: EmailStr
+    message: str
+
+class UserUpdate(BaseModel):
+    username: str
+    email: EmailStr
