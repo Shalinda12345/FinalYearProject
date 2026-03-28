@@ -120,13 +120,16 @@ export default function NavigationBar() {
         <div className="ml-auto">
           {isLoggedIn ? (
             <div className="flex items-center gap-4">
-              <a
+              {!isAdmin ? (
+                <a
                 href="/cart"
                 className="flex items-center gap-2 rounded-lg border border-teal-200 px-4 py-2 text-slate-700 transition-all duration-300 hover:border-teal-400 hover:bg-teal-50"
               >
                 <ShoppingCart className="h-4 w-4" />
                 Cart
               </a>
+              ): null}
+              
               <button
                 type="button"
                 onClick={clickUser}

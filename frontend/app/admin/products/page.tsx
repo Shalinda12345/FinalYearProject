@@ -70,6 +70,7 @@ const ProductsPage = () => {
           name: editedProduct.name,
           description: editedProduct.description,
           price: Number(editedProduct.price),
+          cost_price: Number(editedProduct.cost_price),
           image_url: editedProduct.image_url,
         }),
       });
@@ -133,6 +134,9 @@ const ProductsPage = () => {
                 <th className="px-3 py-2 font-semibold text-gray-700 w-24">
                   Price
                 </th>
+                <th className="px-3 py-2 font-semibold text-gray-700 w-24">
+                  Cost
+                </th>
                 <th className="px-3 py-2 font-semibold text-gray-700 w-1/3">
                   Description
                 </th>
@@ -179,6 +183,21 @@ const ProductsPage = () => {
                       />
                     ) : (
                       product.price
+                    )}
+                  </td>
+                  <td
+                    className="px-3 py-2 font-medium text-gray-600 cursor-pointer w-24"
+                    onClick={() => startEditing(product)}
+                    title={String(product.cost_price || 0)}
+                  >
+                    {editingId === product.id ? (
+                      <input
+                        value={editedProduct?.cost_price ?? 0}
+                        onChange={(e) => onChange("cost_price", e.target.value)}
+                        className="w-full max-w-[120px] border border-gray-200 rounded px-2 py-1"
+                      />
+                    ) : (
+                      product.cost_price || 0
                     )}
                   </td>
                   <td

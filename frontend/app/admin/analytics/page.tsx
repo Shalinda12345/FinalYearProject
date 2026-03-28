@@ -33,6 +33,7 @@ type Summary = {
   total_orders: number;
   total_users: number;
   total_revenue: number;
+  total_profit: number;
   avg_order_value: number;
 };
 
@@ -40,12 +41,14 @@ type DailyStat = {
   date: string;
   total: number;
   orders: number;
+  profit?: number;
 };
 
 type MonthlyStat = {
   month: string;
   label: string;
   amount: number;
+  profit?: number;
 };
 
 type TopProduct = {
@@ -53,6 +56,7 @@ type TopProduct = {
   name: string;
   quantity: number;
   revenue: number;
+  profit?: number;
 };
 
 type ForecastPoint = {
@@ -73,10 +77,12 @@ function LineChart({
   data,
   valueKey,
   color,
+  showProfit = false,
 }: {
   data: any[];
   valueKey: string;
   color: string;
+  showProfit?: boolean;
 }) {
   if (!data || data.length === 0) {
     return <p className="text-sm text-slate-500">No data available.</p>;
@@ -85,26 +91,41 @@ function LineChart({
   const labels = data.map((d) => d.label || d.date || d.month || "Unknown");
   const values = data.map((d) => Number(d[valueKey]) || 0);
 
+  const datasets: any[] = [
+    {
+      label: valueKey === "amount" ? "Revenue" : "Sales",
+      data: values,
+      borderColor: color,
+      backgroundColor: `${color}33`,
+      fill: true,
+      tension: 0.4,
+      pointBackgroundColor: color,
+    },
+  ];
+
+  if (showProfit) {
+    const profitValues = data.map((d) => Number(d.profit) || 0);
+    datasets.push({
+      label: "Profit",
+      data: profitValues,
+      borderColor: "#10b981",
+      backgroundColor: "#10b98133",
+      fill: false,
+      tension: 0.4,
+      pointBackgroundColor: "#10b981",
+    });
+  }
+
   const chartData = {
     labels,
-    datasets: [
-      {
-        label: valueKey === "amount" ? "Revenue" : "Sales",
-        data: values,
-        borderColor: color,
-        backgroundColor: `${color}33`,
-        fill: true,
-        tension: 0.4,
-        pointBackgroundColor: color,
-      },
-    ],
+    datasets,
   };
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { display: false },
+      legend: { display: showProfit },
       tooltip: {
         callbacks: {
           label: (context: any) => `Rs. ${context.parsed.y.toLocaleString()}`,
@@ -137,6 +158,7 @@ function BarChart({ data }: { data: TopProduct[] }) {
 
   const labels = data.map((d) => d.name);
   const values = data.map((d) => d.revenue);
+  const profitValues = data.map((d) => d.profit || 0);
 
   const chartData = {
     labels,
@@ -147,6 +169,12 @@ function BarChart({ data }: { data: TopProduct[] }) {
         backgroundColor: "#14b8a6",
         borderRadius: 4,
       },
+      {
+        label: "Profit",
+        data: profitValues,
+        backgroundColor: "#10b981",
+        borderRadius: 4,
+      }
     ],
   };
 
@@ -155,7 +183,7 @@ function BarChart({ data }: { data: TopProduct[] }) {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { display: false },
+      legend: { display: true },
       tooltip: {
         callbacks: {
           label: (context: any) => `Rs. ${context.parsed.x.toLocaleString()}`,
@@ -328,11 +356,15 @@ export default function AnalyticsPage() {
           </p>
         </div>
 
-        <section className="grid gap-4 md:grid-cols-4">
+        <section className="grid gap-4 md:grid-cols-5">
           {[
             {
               label: "Revenue",
               value: summary?.total_revenue ?? 0,
+            },
+            {
+              label: "Profit",
+              value: summary?.total_profit ?? 0,
             },
             {
               label: "Orders",
@@ -367,7 +399,7 @@ export default function AnalyticsPage() {
               Monthly revenue trend
             </h2>
             <div className="mt-4">
-              <LineChart data={monthlyRevenue} valueKey="amount" color="#0EA5A4" />
+              <LineChart data={monthlyRevenue} valueKey="amount" color="#0EA5A4" showProfit={true} />
             </div>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -386,7 +418,7 @@ export default function AnalyticsPage() {
               Daily sales (last 30 days)
             </h2>
             <div className="mt-4">
-              <LineChart data={dailySales} valueKey="total" color="#1D4ED8" />
+              <LineChart data={dailySales} valueKey="total" color="#1D4ED8" showProfit={true} />
             </div>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">

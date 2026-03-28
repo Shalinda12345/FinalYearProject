@@ -181,8 +181,8 @@ export default function DashboardInteractions() {
                 {/* Spending Trend Area Chart */}
                 <div className="col-span-1 sm:col-span-2 lg:col-span-3 bg-white/70 p-8 rounded-3xl shadow-lg shadow-slate-200/50 border border-white backdrop-blur-xl mt-2 fade-in animate-in slide-in-from-bottom-6 duration-700">
                   <div className="mb-8">
-                    <h2 className="text-lg font-semibold text-slate-800 font-[var(--font-display)]">Spending Trend</h2>
-                    <p className="text-sm text-slate-500">Your order totals over the recent period</p>
+                    <h2 className="text-lg font-semibold text-slate-800 font-[var(--font-display)]">Order Trend</h2>
+                    <p className="text-sm text-slate-500">Your total Orders over the recent period</p>
                   </div>
                   {chartData.length > 0 ? (
                     <div className="h-[300px] w-full">

@@ -7,6 +7,7 @@ export default function AddProductsPage() {
     name: "",
     description: "",
     price: "",
+    cost_price: "",
     image_url: "",
   });
 
@@ -63,6 +64,18 @@ export default function AddProductsPage() {
               onChange={(e) => setForm({ ...form, price: e.target.value })}
               placeholder="LKR 0.00"
               inputMode="decimal"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Cost Price (for profit tracking)
+            </label>
+            <input
+              className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
+              onChange={(e) => setForm({ ...form, cost_price: e.target.value })}
+              placeholder="LKR 0.00"
+              inputMode="decimal"
+              type="number"
             />
           </div>
           <div>

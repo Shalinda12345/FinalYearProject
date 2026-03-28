@@ -49,10 +49,14 @@ def create_order(
     )
     
     for item in order.items:
+        product_db = db.query(models.Products).filter(models.Products.id == item.product_id).first()
+        item_cost = float(product_db.cost_price) if product_db else 0.0
+        
         new_item = models.OrderItem(
             product_id=item.product_id,
             quantity=item.quantity,
-            price=item.price
+            price=item.price,
+            cost_price=item_cost
         )
         new_order.items.append(new_item)
 
@@ -94,7 +98,8 @@ async def get_orders(user_id: int | None = None, db: Session = Depends(get_db)):
                 {
                     "product_id": item.product_id,
                     "quantity": item.quantity,
-                    "price": float(item.price)
+                    "price": float(item.price),
+                    "cost_price": float(item.cost_price)
                 } for item in order.items
             ]
         } for order in orders

@@ -29,6 +29,7 @@ class Products(Base):
     name = Column(String(100), nullable=False)
     description = Column(String(255), nullable=True)
     price = Column(Integer, nullable=False)
+    cost_price = Column(Integer, nullable=False, server_default='0')
     image_url = Column(String(2048), nullable=False)
 
 
@@ -61,6 +62,7 @@ class OrderItem(Base):
     product_id = Column(Integer, nullable=False)
     quantity = Column(Integer, nullable=False)
     price = Column(DECIMAL(10, 2), nullable=False) # Price at moment of purchase
+    cost_price = Column(DECIMAL(10, 2), nullable=False, server_default='0')
 
     order = relationship("Order", back_populates="items")
 

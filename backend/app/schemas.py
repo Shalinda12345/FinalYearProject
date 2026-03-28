@@ -25,6 +25,7 @@ class ProductCreate(BaseModel):
     name: str
     description: str | None = None
     price: int
+    cost_price: int = 0
     image_url: str | None = None
 
 
@@ -33,6 +34,7 @@ class ProductResponse(BaseModel):
     name: str
     description: str | None = None
     price: int
+    cost_price: int = 0
     image_url: str | None = None
 
     class Config:

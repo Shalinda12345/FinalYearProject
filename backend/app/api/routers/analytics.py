@@ -28,9 +28,14 @@ def _get_daily_stats(db: Session):
             continue
         day = order.created_at.date().isoformat()
         if day not in stats:
-            stats[day] = {"date": day, "total": 0.0, "orders": 0}
+            stats[day] = {"date": day, "total": 0.0, "profit": 0.0, "orders": 0}
         stats[day]["total"] += float(order.total_amount or 0)
+        
+        order_cost = sum(float(item.cost_price or 0) * item.quantity for item in order.items)
+        stats[day]["profit"] += float(order.total_amount or 0) - order_cost
+        
         stats[day]["orders"] += 1
+
     return [stats[k] for k in sorted(stats.keys())]
 
 def _get_monthly_totals(daily_stats):
@@ -38,8 +43,9 @@ def _get_monthly_totals(daily_stats):
     for item in daily_stats:
         month_key = item["date"][:7]
         if month_key not in monthly:
-            monthly[month_key] = {"month": month_key, "amount": 0.0}
+            monthly[month_key] = {"month": month_key, "amount": 0.0, "profit": 0.0}
         monthly[month_key]["amount"] += float(item["total"])
+        monthly[month_key]["profit"] += float(item.get("profit", 0.0))
     result = [monthly[k] for k in sorted(monthly.keys())]
     for item in result:
         year, month = item["month"].split("-")
@@ -210,12 +216,17 @@ def analytics_summary(db: Session = Depends(get_db)):
     total_users = db.query(models.User).count()
     total_revenue = db.query(func.sum(models.Order.total_amount)).scalar() or 0
     total_revenue = float(total_revenue)
+    
+    total_cost = db.query(func.sum(models.OrderItem.cost_price * models.OrderItem.quantity)).scalar() or 0
+    total_profit = total_revenue - float(total_cost)
+
     avg_order_value = float(total_revenue / total_orders) if total_orders else 0.0
     return {
         "total_products": total_products,
         "total_orders": total_orders,
         "total_users": total_users,
         "total_revenue": round(total_revenue, 2),
+        "total_profit": round(total_profit, 2),
         "avg_order_value": round(avg_order_value, 2),
     }
 
@@ -239,6 +250,7 @@ def analytics_top_products(limit: int = 5, db: Session = Depends(get_db)):
             models.Products.name.label("name"),
             func.sum(models.OrderItem.quantity).label("quantity"),
             func.sum(models.OrderItem.price * models.OrderItem.quantity).label("revenue"),
+            func.sum((models.OrderItem.price - models.OrderItem.cost_price) * models.OrderItem.quantity).label("profit")
         )
         .join(models.Products, models.Products.id == models.OrderItem.product_id)
         .group_by(models.OrderItem.product_id, models.Products.name)
@@ -252,6 +264,7 @@ def analytics_top_products(limit: int = 5, db: Session = Depends(get_db)):
             "name": row.name,
             "quantity": int(row.quantity or 0),
             "revenue": float(row.revenue or 0),
+            "profit": float(row.profit or 0),
         })
     return results
 

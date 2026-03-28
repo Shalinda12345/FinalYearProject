@@ -16,6 +16,7 @@ def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db)
         name=product.name,
         description=product.description,
         price=product.price,
+        cost_price=product.cost_price,
         image_url=product.image_url
     )
     db.add(new_product)
@@ -31,6 +32,7 @@ def update_product(product_id: int, product: schemas.ProductCreate, db: Session 
     db_product.name = product.name
     db_product.description = product.description
     db_product.price = product.price
+    db_product.cost_price = product.cost_price
     db_product.image_url = product.image_url
     db.commit()
     db.refresh(db_product)
