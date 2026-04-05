@@ -215,8 +215,8 @@ export default function CartPage() {
           </p>
         ) : (
           <>
-            <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
-              <table className="w-full">
+            <div className="bg-white rounded-lg shadow-md overflow-x-auto mb-8">
+              <table className="w-full min-w-[600px]">
                 <thead className="bg-gray-100 border-b">
                   <tr>
                     <th className="px-6 py-4 text-left font-semibold text-gray-700">
