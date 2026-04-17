@@ -21,8 +21,8 @@ export default function Register() {
       <NavigationBar />
       <main className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-32 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-blue-200/40 blur-3xl" />
-          <div className="absolute bottom-0 left-[-10%] h-72 w-72 rounded-full bg-teal-200/40 blur-3xl" />
+          <div className="absolute -top-32 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-amber-200/40 blur-3xl" />
+          <div className="absolute bottom-0 left-[-10%] h-72 w-72 rounded-full bg-orange-200/40 blur-3xl" />
         </div>
 
         <div className="relative mx-auto max-w-6xl px-6 py-16">
@@ -48,7 +48,7 @@ export default function Register() {
                     onChange={(e) =>
                       setForm({ ...form, username: e.target.value })
                     }
-                    className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+                    className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-100"
                     required
                   />
                 </div>
@@ -62,7 +62,7 @@ export default function Register() {
                     onChange={(e) =>
                       setForm({ ...form, email: e.target.value })
                     }
-                    className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+                    className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-100"
                     required
                   />
                 </div>
@@ -76,7 +76,7 @@ export default function Register() {
                     onChange={(e) =>
                       setForm({ ...form, password: e.target.value })
                     }
-                    className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+                    className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-100"
                     required
                   />
                 </div>
@@ -90,7 +90,7 @@ export default function Register() {
 
               <div className="mt-6 text-sm text-slate-500">
                 Already registered?{" "}
-                <a href="/login" className="text-teal-700 hover:underline">
+                <a href="/login" className="text-orange-700 hover:underline">
                   Sign in
                 </a>
               </div>

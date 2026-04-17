@@ -276,7 +276,7 @@ export default function AdminDashboard() {
 
             <button
               onClick={() => router.push("/admin/add-products")}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
+              className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
             >
               Add Products
             </button>
@@ -329,7 +329,7 @@ export default function AdminDashboard() {
           <div className="space-y-3">
             <button
               onClick={() => router.push("/admin/add-products")}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2"
+              className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2"
             >
               <PackagePlus className="h-4 w-4" /> Add Product
             </button>

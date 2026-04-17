@@ -40,7 +40,7 @@ export default function AdminLogin() {
       <NavigationBar />
       <main className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-teal-500/20 blur-3xl" />
+          <div className="absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-orange-500/20 blur-3xl" />
           <div className="absolute bottom-0 right-[-10%] h-80 w-80 rounded-full bg-indigo-500/20 blur-3xl" />
         </div>
 
@@ -94,7 +94,7 @@ export default function AdminLogin() {
                     onChange={(e) =>
                       setForm({ ...form, username: e.target.value })
                     }
-                    className="mt-2 w-full rounded-lg border border-white/10 bg-slate-900 px-4 py-3 text-sm text-white shadow-sm focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/20"
+                    className="mt-2 w-full rounded-lg border border-white/10 bg-slate-900 px-4 py-3 text-sm text-white shadow-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20"
                   />
                 </div>
                 <div>
@@ -107,12 +107,12 @@ export default function AdminLogin() {
                     onChange={(e) =>
                       setForm({ ...form, password: e.target.value })
                     }
-                    className="mt-2 w-full rounded-lg border border-white/10 bg-slate-900 px-4 py-3 text-sm text-white shadow-sm focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/20"
+                    className="mt-2 w-full rounded-lg border border-white/10 bg-slate-900 px-4 py-3 text-sm text-white shadow-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-teal-500 px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-teal-400"
+                  className="w-full rounded-lg bg-orange-500 px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-orange-400"
                 >
                   Enter dashboard
                 </button>

@@ -38,7 +38,7 @@ export default function ContactPage() {
       <main className="mx-auto max-w-5xl px-6 py-16">
         <div className="grid gap-10 md:grid-cols-[1.1fr_0.9fr]">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-teal-700">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-700">
               Contact Us
             </p>
             <h1 className="mt-4 text-4xl font-semibold font-[var(--font-display)]">
@@ -96,12 +96,12 @@ export default function ContactPage() {
               </div>
               <button
                 type="submit"
-                className="w-full rounded-lg bg-teal-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-teal-700"
+                className="w-full rounded-lg bg-orange-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-orange-700"
               >
                 Send message
               </button>
               {status && (
-                <p className="text-sm text-teal-700" role="status">
+                <p className="text-sm text-orange-700" role="status">
                   {status}
                 </p>
               )}

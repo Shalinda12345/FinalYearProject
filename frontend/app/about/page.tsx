@@ -6,7 +6,7 @@ export default function AboutPage() {
       <NavigationBar />
       <main className="mx-auto max-w-5xl px-6 py-16">
         <div className="rounded-3xl border border-slate-200 bg-white p-10 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-teal-700">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-700">
             About Heshan Products
           </p>
           <h1 className="mt-4 text-4xl font-semibold font-[var(--font-display)]">

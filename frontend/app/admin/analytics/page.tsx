@@ -344,7 +344,7 @@ export default function AnalyticsPage() {
       <NavigationBar />
       <main className="mx-auto max-w-6xl px-6 py-12">
         <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-teal-700">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-700">
             Sales Analytics
           </p>
           <h1 className="mt-2 text-3xl font-semibold font-[var(--font-display)]">

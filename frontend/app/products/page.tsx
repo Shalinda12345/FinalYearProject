@@ -135,12 +135,12 @@ export default function ProductsPage() {
 
                 {user || adminUser ? (
                   <div className="flex justify-between items-center mt-4">
-                    <span className="text-2xl font-bold text-blue-600">
+                    <span className="text-2xl font-bold text-amber-600">
                       Rs. {product.price.toFixed(2)}
                     </span>
                     <button
                       onClick={() => addToCart(product.id)}
-                      className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-300"
+                      className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors duration-300"
                     >
                       Add to Cart
                     </button>
@@ -161,7 +161,7 @@ export default function ProductsPage() {
         {adminUser ? (
           <button
             onClick={() => router.push("/admin/add-products")}
-            className="mt-6 bg-blue-500 text-white p-2 rounded mx-auto block"
+            className="mt-6 bg-amber-500 text-white p-2 rounded mx-auto block"
           >
             Add Products
           </button>

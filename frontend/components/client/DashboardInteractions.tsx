@@ -85,7 +85,7 @@ export default function DashboardInteractions() {
           onClick={() => setActiveView("stats")}
           className={`px-5 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 transition-all duration-300 ${
             activeView === "stats"
-              ? "bg-teal-500 text-white shadow-md shadow-teal-500/20"
+              ? "bg-orange-500 text-white shadow-md shadow-orange-500/20"
               : "text-slate-500 hover:bg-white hover:text-slate-900"
           }`}
         >
@@ -99,7 +99,7 @@ export default function DashboardInteractions() {
           }}
           className={`px-5 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 transition-all duration-300 ${
             activeView === "orders"
-              ? "bg-teal-500 text-white shadow-md shadow-teal-500/20"
+              ? "bg-orange-500 text-white shadow-md shadow-orange-500/20"
               : "text-slate-500 hover:bg-white hover:text-slate-900"
           }`}
         >
@@ -112,7 +112,7 @@ export default function DashboardInteractions() {
       <div className="min-h-[400px]">
         {loading ? (
           <div className="flex justify-center items-center h-64 bg-white/40 rounded-3xl border border-white/60 shadow-xl backdrop-blur-xl">
-            <RefreshCw className="animate-spin text-teal-500 w-8 h-8" />
+            <RefreshCw className="animate-spin text-orange-500 w-8 h-8" />
           </div>
         ) : (
           <>
@@ -123,11 +123,11 @@ export default function DashboardInteractions() {
                 {/* Orders Card */}
                 <div className="group relative overflow-hidden bg-white/70 p-6 rounded-3xl shadow-lg shadow-slate-200/50 border border-white backdrop-blur-xl transition hover:-translate-y-1 hover:shadow-xl">
                   <div className="absolute top-0 right-0 p-4 opacity-10 transition group-hover:opacity-20 translate-x-4 -translate-y-4">
-                    <ShoppingBag className="w-24 h-24 text-teal-600" />
+                    <ShoppingBag className="w-24 h-24 text-orange-600" />
                   </div>
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="p-3 bg-teal-100 rounded-xl">
-                      <ShoppingBag className="w-6 h-6 text-teal-600" />
+                    <div className="p-3 bg-orange-100 rounded-xl">
+                      <ShoppingBag className="w-6 h-6 text-orange-600" />
                     </div>
                     <div>
                       <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-widest">Total Orders</h3>
@@ -158,7 +158,7 @@ export default function DashboardInteractions() {
                 </div>
 
                 {/* Average Order Value Card */}
-                <div className="group relative overflow-hidden bg-gradient-to-br from-teal-500 to-indigo-600 p-6 rounded-3xl shadow-lg shadow-teal-500/20 border border-white/10 transition hover:-translate-y-1 hover:shadow-xl">
+                <div className="group relative overflow-hidden bg-gradient-to-br from-orange-500 to-indigo-600 p-6 rounded-3xl shadow-lg shadow-orange-500/20 border border-white/10 transition hover:-translate-y-1 hover:shadow-xl">
                   <div className="absolute top-0 right-0 p-4 opacity-20 transition group-hover:opacity-30 translate-x-4 -translate-y-4">
                     <TrendingUp className="w-24 h-24 text-white" />
                   </div>
@@ -167,7 +167,7 @@ export default function DashboardInteractions() {
                       <TrendingUp className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-teal-50 uppercase tracking-widest">Avg Order</h3>
+                      <h3 className="text-sm font-semibold text-orange-50 uppercase tracking-widest">Avg Order</h3>
                     </div>
                   </div>
                   <p className="text-4xl font-bold text-white font-[var(--font-display)]">
@@ -300,8 +300,8 @@ export default function DashboardInteractions() {
                                 </div>
                               </td>
                               <td className="px-6 py-4">
-                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-teal-50 text-teal-700 border border-teal-200/50">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-orange-50 text-orange-700 border border-orange-200/50">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
                                   Completed
                                 </span>
                               </td>

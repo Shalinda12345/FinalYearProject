@@ -2,197 +2,199 @@ import NavigationBar from "@/components/layout/NavigationBar";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen bg-amber-50 text-slate-900 font-[var(--font-body)]">
       <NavigationBar />
       <main className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-teal-200/40 blur-3xl" />
-          <div className="absolute top-24 right-[-10%] h-72 w-72 rounded-full bg-amber-200/40 blur-3xl" />
+        {/* Dynamic Background */}
+        <div className="pointer-events-none absolute inset-0 z-0">
+          <div className="absolute -top-40 left-10 h-[500px] w-[500px] rounded-full bg-orange-400/20 blur-3xl" />
+          <div className="absolute top-40 right-[-10%] h-[400px] w-[400px] rounded-full bg-amber-400/20 blur-3xl" />
+          <div className="absolute bottom-20 left-1/3 h-[600px] w-[600px] rounded-full bg-emerald-400/10 blur-3xl" />
         </div>
 
-        <section className="relative mx-auto max-w-6xl px-6 pb-16 pt-16 sm:pt-24">
-          <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-            <div>
-              <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-teal-200 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-teal-700">
-                Smart Production Intelligence
-              </p>
-              <h1 className="text-4xl font-semibold leading-tight text-slate-900 sm:text-5xl font-[var(--font-display)]">
-                Forecast demand. Produce with confidence. Serve every order on time.
-              </h1>
-              <p className="mt-6 text-lg text-slate-600">
-                Heshan Products manufactures Ice packets, Watalappan, and Drink
-                Cups. This platform brings sales forecasting, order management,
-                and analytics together so owners can plan production, reduce
-                waste, and take better business decisions.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <a
-                  href="/products"
-                  className="rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-teal-700"
-                >
-                  View Catalogue
-                </a>
-                <a
-                  href="/contact"
-                  className="rounded-lg border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-teal-400 hover:text-teal-700"
-                >
-                  Request a Demo
-                </a>
-              </div>
-              <div className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4">
-                {[
-                  { label: "Products", value: "Ice, Watalappan, Cups" },
-                  { label: "Orders", value: "Online + dashboard" },
-                  { label: "Forecasting", value: "Sales trends" },
-                  { label: "Analytics", value: "Admin insights" },
-                ].map((item) => (
-                  <div key={item.label} className="rounded-lg bg-white/80 p-4 shadow-sm">
-                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
-                      {item.label}
-                    </p>
-                    <p className="mt-2 text-sm font-semibold text-slate-800">
-                      {item.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-slate-200 bg-white/80 p-8 shadow-xl">
-              <h2 className="text-2xl font-semibold text-slate-900 font-[var(--font-display)]">
-                Business Overview
-              </h2>
-              <p className="mt-3 text-sm text-slate-600">
-                Admins can track sales, view order trends, and monitor profit
-                over time from a single dashboard.
-              </p>
-              <div className="mt-6 space-y-4">
-                {[
-                  {
-                    title: "Sales Forecast",
-                    desc: "Predict upcoming demand for Ice packets, Watalappan, and Drink Cups.",
-                  },
-                  {
-                    title: "Order Placement",
-                    desc: "Wholesalers place orders online through the products page and cart.",
-                  },
-                  {
-                    title: "Admin Analytics",
-                    desc: "Interactive charts for revenue, orders, and top products.",
-                  },
-                ].map((item) => (
-                  <div
-                    key={item.title}
-                    className="rounded-lg border border-slate-100 bg-slate-50 px-4 py-3"
-                  >
-                    <p className="text-sm font-semibold text-slate-800">
-                      {item.title}
-                    </p>
-                    <p className="text-xs text-slate-500">{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-6 rounded-lg bg-teal-50 px-4 py-3 text-xs text-teal-700">
-                Forecast-ready dashboards for food production SMEs.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-6xl px-6 pb-16">
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              {
-                title: "Predictive Sales Engine",
-                desc: "Forecast sales volumes so production stays aligned with demand.",
-              },
-              {
-                title: "Unified Admin Control",
-                desc: "Manage users, products, orders, reports, and insights in one place.",
-              },
-              {
-                title: "Customer Ordering",
-                desc: "Users can order online, track carts, and view order history in their dashboard.",
-              },
-            ].map((card) => (
-              <div
-                key={card.title}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+        {/* Hero Section */}
+        <section className="relative z-10 mx-auto max-w-7xl px-6 pb-20 pt-20 sm:pt-32 lg:pb-32">
+          <div className="text-center max-w-4xl mx-auto">
+            <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white/70 px-5 py-2 text-sm font-bold uppercase tracking-[0.2em] text-orange-700 shadow-sm backdrop-blur-md">
+              Premium Quality • Bulk Supply
+            </p>
+            <h1 className="text-5xl font-extrabold leading-tight text-slate-900 sm:text-7xl font-[var(--font-display)] tracking-tight">
+              Fueling your business with <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-500">premium products.</span>
+            </h1>
+            <p className="mt-8 text-xl text-slate-600 leading-relaxed font-medium">
+              Heshan Products is a leading manufacturer and wholesale distributor of the finest Watalappan, high-grade Packaged Ice, and premium Disposable Cups. Fresh, fast, and built for scale.
+            </p>
+            <div className="mt-10 flex flex-wrap justify-center gap-6">
+              <a
+                href="/products"
+                className="group relative flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-orange-500/30 transition-all hover:-translate-y-1 hover:shadow-orange-500/50"
               >
-                <h3 className="text-lg font-semibold font-[var(--font-display)]">
-                  {card.title}
-                </h3>
-                <p className="mt-3 text-sm text-slate-600">{card.desc}</p>
-              </div>
-            ))}
+                Start Ordering Now
+                <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </a>
+              <a
+                href="/about"
+                className="flex items-center justify-center rounded-xl bg-white px-8 py-4 text-lg font-bold text-slate-800 shadow-md ring-1 ring-slate-200 transition-all hover:bg-slate-50 hover:ring-slate-300 hover:shadow-lg"
+              >
+                Learn About Us
+              </a>
+            </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-6 pb-20">
-          <div className="grid gap-10 rounded-3xl border border-slate-200 bg-white p-10 md:grid-cols-[1.2fr_0.8fr]">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
-                How it works
-              </p>
-              <h2 className="mt-3 text-3xl font-semibold font-[var(--font-display)]">
-                From customer order to production planning
+        {/* Categories Section */}
+        <section className="relative z-10 bg-white py-24 shadow-sm border-y border-slate-100">
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold font-[var(--font-display)] text-slate-900">
+                Our Signature Products
               </h2>
-              <p className="mt-4 text-sm text-slate-600">
-                Customers browse the Our Products page, add items to cart, and
-                place orders online. The system updates analytics instantly, and
-                the forecasting model helps admins decide the next production
-                batch.
-              </p>
+              <p className="mt-4 text-lg text-slate-600">Manufactured to the highest standards for retail and commercial use.</p>
             </div>
-            <div className="space-y-4">
-              {[
-                "Customers place orders online.",
-                "Admins review orders and sales dashboards.",
-                "Forecasts guide production decisions.",
-              ].map((step, index) => (
-                <div
-                  key={step}
-                  className="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3"
-                >
-                  <div className="h-8 w-8 rounded-full bg-teal-600 text-center text-sm font-semibold leading-8 text-white">
-                    {index + 1}
+            
+            <div className="grid gap-10 md:grid-cols-3">
+              {/* Product 1 */}
+              <div className="group rounded-3xl bg-slate-50 border border-slate-100 overflow-hidden shadow-sm transition hover:shadow-xl hover:-translate-y-2">
+                <div className="h-64 overflow-hidden relative">
+                  <img src="/images/watalappan.png" alt="Watalappan Dessert" className="w-full h-full object-cover transition duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                     <h3 className="text-2xl font-bold text-white">Classic Watalappan</h3>
                   </div>
-                  <p className="text-sm text-slate-700">{step}</p>
                 </div>
-              ))}
+                <div className="p-6 flex flex-col h-[calc(100%-16rem)] justify-between">
+                  <p className="text-slate-600 mb-6 font-medium">Rich, traditional Sri Lankan dessert made from authentic jaggery and spices. Packaged fresh for retail shelves and catering events.</p>
+                  <a href="/products" className="text-amber-600 font-bold hover:text-amber-700 flex flex-row items-center gap-1 group/link w-max">
+                    Order Wholesale
+                    <svg className="w-4 h-4 transition-transform group-hover/link:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+              
+              {/* Product 2 */}
+              <div className="group rounded-3xl bg-slate-50 border border-slate-100 overflow-hidden shadow-sm transition hover:shadow-xl hover:-translate-y-2">
+                <div className="h-64 overflow-hidden relative">
+                  <img src="/images/ice.png" alt="Commercial Packaged Ice" className="w-full h-full object-cover transition duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-cyan-900/60 to-transparent flex items-end p-6">
+                     <h3 className="text-2xl font-bold text-white">Packaged Ice</h3>
+                  </div>
+                </div>
+                <div className="p-6 flex flex-col h-[calc(100%-16rem)] justify-between">
+                  <p className="text-slate-600 mb-6 font-medium">Crystal-clear, hygienically purified ice cubes. Delivered frozen solid for events, restaurants, and convenience stores.</p>
+                  <a href="/products" className="text-cyan-600 font-bold hover:text-cyan-700 flex items-center gap-1 group/link w-max">
+                    Order Wholesale
+                    <svg className="w-4 h-4 transition-transform group-hover/link:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+              
+              {/* Product 3 */}
+              <div className="group rounded-3xl bg-slate-50 border border-slate-100 overflow-hidden shadow-sm transition hover:shadow-xl hover:-translate-y-2">
+                <div className="h-64 overflow-hidden relative">
+                  <img src="/images/cups.png" alt="Disposable Drink Cups" className="w-full h-full object-cover transition duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/60 to-transparent flex items-end p-6">
+                     <h3 className="text-2xl font-bold text-white">Drink Cups</h3>
+                  </div>
+                </div>
+                <div className="p-6 flex flex-col h-[calc(100%-16rem)] justify-between">
+                  <p className="text-slate-600 mb-6 font-medium">Durable, leak-proof, and premium quality disposable cups. Perfect for hot beverages, smoothies, and takeaway orders.</p>
+                  <a href="/products" className="text-emerald-600 font-bold hover:text-emerald-700 flex items-center gap-1 group/link w-max">
+                    Order Wholesale
+                    <svg className="w-4 h-4 transition-transform group-hover/link:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-6 pb-20">
-          <div className="rounded-3xl bg-slate-900 px-10 py-12 text-white">
-            <div className="grid gap-6 md:grid-cols-[1.2fr_0.8fr] md:items-center">
-              <div>
-                <h2 className="text-3xl font-semibold font-[var(--font-display)]">
-                  Ready to modernize production and sales?
-                </h2>
-                <p className="mt-4 text-sm text-slate-200">
-                  Keep your team aligned with real-time orders, clear analytics,
-                  and accurate forecasts designed for SMEs.
-                </p>
+        {/* Why Choose Us */}
+        <section className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32">
+          <div className="grid gap-12 md:grid-cols-2 md:items-center">
+            <div>
+              <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl font-[var(--font-display)]">
+                Built for Wholesale Reliability
+              </h2>
+              <p className="mt-6 text-lg text-slate-600 leading-relaxed font-medium">
+                Our business operates on efficiency and quality. We provide not only top-tier products but an intelligent ordering platform to ensure you never run out of stock. Manage your business seamlessly while we handle the manufacturing.
+              </p>
+              
+              <div className="mt-10 space-y-6">
+                {[
+                  {
+                    title: "Scale Your Inventory",
+                    desc: "Bulk purchasing options with transparent wholesale pricing.",
+                    color: "bg-orange-100 text-orange-600",
+                    icon: "📈"
+                  },
+                  {
+                    title: "Intelligent Forecasting",
+                    desc: "We track demand so we're always ready to fulfill your biggest orders.",
+                    color: "bg-amber-100 text-amber-600",
+                    icon: "🧠"
+                  },
+                  {
+                    title: "Dedicated B2B Support",
+                    desc: "Access your dashboard to track orders, download invoices, and more.",
+                    color: "bg-emerald-100 text-emerald-600",
+                    icon: "🤝"
+                  },
+                ].map((feature, i) => (
+                  <div key={i} className="flex items-start gap-4">
+                    <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${feature.color} text-xl`}>
+                      {feature.icon}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-slate-900">{feature.title}</h3>
+                      <p className="mt-2 text-slate-600">{feature.desc}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="flex flex-wrap gap-4 md:justify-end">
-                <a
-                  href="/register"
-                  className="rounded-lg bg-white px-6 py-3 text-sm font-semibold text-slate-900"
-                >
-                  Create an account
-                </a>
-                <a
-                  href="/contact"
-                  className="rounded-lg border border-white/40 px-6 py-3 text-sm font-semibold text-white"
-                >
-                  Talk to us
-                </a>
+            </div>
+            
+            <div className="relative mt-8 md:mt-0">
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-orange-400 to-amber-300 opacity-20 blur-2xl"></div>
+              <div className="relative rounded-3xl bg-slate-900 overflow-hidden shadow-2xl p-1">
+                 <div className="w-full bg-slate-800 rounded-[22px] min-h-[400px] flex items-center justify-center flex-col p-8 text-center text-white border border-slate-700/50">
+                    <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/30">
+                      <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                      </svg>
+                    </div>
+                    <h3 className="text-2xl font-bold mb-2">Modern B2B Portal</h3>
+                    <p className="text-slate-300">Manage orders, view historical data, and restock products with just a few clicks through our custom dashboard.</p>
+                 </div>
               </div>
             </div>
           </div>
         </section>
+
+        {/* CTA */}
+        <section className="relative z-10 bg-slate-900 py-24 text-center border-t border-slate-800">
+           <div className="mx-auto max-w-4xl px-6">
+             <h2 className="text-4xl font-extrabold text-white font-[var(--font-display)]">Partner with Heshan Products, Today.</h2>
+             <p className="mt-6 text-xl text-slate-300 font-medium max-w-2xl mx-auto">
+               Join hundreds of retailers, event planners, and suppliers who rely on us for their daily operations.
+             </p>
+             <div className="mt-10 flex flex-wrap justify-center gap-4">
+               <a href="/register" className="rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 px-8 py-4 text-lg font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-orange-500/30">
+                 Create Wholesale Account
+               </a>
+               <a href="/contact" className="rounded-xl bg-slate-800 px-8 py-4 text-lg font-bold text-white border border-slate-700 transition-all hover:bg-slate-700 hover:border-slate-600">
+                 Contact Sales Team
+               </a>
+             </div>
+           </div>
+        </section>
+
       </main>
     </div>
   );

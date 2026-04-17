@@ -309,7 +309,7 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between mb-4 text-lg font-semibold">
                   <span>Total:</span>
-                  <span className="text-blue-600">
+                  <span className="text-amber-600">
                     LKR {totalPrice.toFixed(2)}
                   </span>
                 </div>
@@ -320,7 +320,7 @@ export default function CartPage() {
                     });
                     handlePurchase();
                   }}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors"
+                  className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-lg transition-colors"
                 >
                   Proceed to Checkout
                 </button>

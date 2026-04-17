@@ -66,7 +66,7 @@ export default function Checkout() {
       <button
         onClick={handlePurchase}
         disabled={loading}
-        className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
+        className="bg-amber-600 text-white px-6 py-2 rounded hover:bg-amber-700 disabled:bg-gray-400"
       >
         {loading ? "Processing..." : "Pay Now"}
       </button>

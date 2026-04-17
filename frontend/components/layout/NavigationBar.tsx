@@ -99,25 +99,25 @@ export default function NavigationBar() {
         <div className="hidden md:flex items-center gap-8">
           <a
             href="/"
-            className="text-slate-700 transition hover:text-teal-700"
+            className="text-slate-700 transition hover:text-orange-700"
           >
             Home
           </a>
           <a
             href="/products"
-            className="text-slate-700 transition hover:text-teal-700"
+            className="text-slate-700 transition hover:text-orange-700"
           >
             Our Products
           </a>
           <a
             href="/about"
-            className="text-slate-700 transition hover:text-teal-700"
+            className="text-slate-700 transition hover:text-orange-700"
           >
             About Us
           </a>
           <a
             href="/contact"
-            className="text-slate-700 transition hover:text-teal-700"
+            className="text-slate-700 transition hover:text-orange-700"
           >
             Contact
           </a>
@@ -130,7 +130,7 @@ export default function NavigationBar() {
               {!isAdmin ? (
                 <a
                   href="/cart"
-                  className="flex items-center gap-2 rounded-lg border border-teal-200 px-4 py-2 text-slate-700 transition hover:border-teal-400 hover:bg-teal-50"
+                  className="flex items-center gap-2 rounded-lg border border-orange-200 px-4 py-2 text-slate-700 transition hover:border-orange-400 hover:bg-orange-50"
                 >
                   <ShoppingCart className="h-4 w-4" />
                   <span>Cart</span>
@@ -140,7 +140,7 @@ export default function NavigationBar() {
               <button
                 type="button"
                 onClick={clickUser}
-                className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-slate-700 transition hover:border-teal-400 hover:text-teal-700"
+                className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-slate-700 transition hover:border-orange-400 hover:text-orange-700"
               >
                 <UserRound className="h-4 w-4" />
                 <span className="max-w-[100px] truncate">{user}</span>
@@ -156,13 +156,13 @@ export default function NavigationBar() {
             <div className="flex items-center gap-3">
               <a
                 href="/login"
-                className="rounded-lg border border-slate-200 px-4 py-2 text-slate-700 transition hover:border-teal-400 hover:text-teal-700"
+                className="rounded-lg border border-slate-200 px-4 py-2 text-slate-700 transition hover:border-orange-400 hover:text-orange-700"
               >
                 Login
               </a>
               <a
                 href="/register"
-                className="rounded-lg bg-teal-600 px-4 py-2 text-white transition hover:bg-teal-700"
+                className="rounded-lg bg-orange-600 px-4 py-2 text-white transition hover:bg-orange-700"
               >
                 Register
               </a>
@@ -186,25 +186,25 @@ export default function NavigationBar() {
         <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-xl flex flex-col py-4 px-4 space-y-4">
           <a
             href="/"
-            className="block text-slate-700 font-medium hover:text-teal-700"
+            className="block text-slate-700 font-medium hover:text-orange-700"
           >
             Home
           </a>
           <a
             href="/products"
-            className="block text-slate-700 font-medium hover:text-teal-700"
+            className="block text-slate-700 font-medium hover:text-orange-700"
           >
             Our Products
           </a>
           <a
             href="/about"
-            className="block text-slate-700 font-medium hover:text-teal-700"
+            className="block text-slate-700 font-medium hover:text-orange-700"
           >
             About Us
           </a>
           <a
             href="/contact"
-            className="block text-slate-700 font-medium hover:text-teal-700"
+            className="block text-slate-700 font-medium hover:text-orange-700"
           >
             Contact
           </a>
@@ -215,7 +215,7 @@ export default function NavigationBar() {
                 {!isAdmin ? (
                   <a
                     href="/cart"
-                    className="flex items-center gap-2 text-slate-700 font-medium hover:text-teal-700"
+                    className="flex items-center gap-2 text-slate-700 font-medium hover:text-orange-700"
                   >
                     <ShoppingCart className="h-5 w-5" />
                     <span>Cart</span>
@@ -224,7 +224,7 @@ export default function NavigationBar() {
                 <button
                   type="button"
                   onClick={clickUser}
-                  className="flex items-center gap-2 text-slate-700 font-medium hover:text-teal-700 w-full text-left"
+                  className="flex items-center gap-2 text-slate-700 font-medium hover:text-orange-700 w-full text-left"
                 >
                   <UserRound className="h-5 w-5" />
                   <span>{user}</span>
@@ -240,13 +240,13 @@ export default function NavigationBar() {
               <div className="grid grid-cols-2 gap-3 mt-2">
                 <a
                   href="/login"
-                  className="rounded-lg border border-slate-200 py-2 text-center text-slate-700 font-medium hover:text-teal-700"
+                  className="rounded-lg border border-slate-200 py-2 text-center text-slate-700 font-medium hover:text-orange-700"
                 >
                   Login
                 </a>
                 <a
                   href="/register"
-                  className="rounded-lg bg-teal-600 py-2 text-center text-white font-medium hover:bg-teal-700"
+                  className="rounded-lg bg-orange-600 py-2 text-center text-white font-medium hover:bg-orange-700"
                 >
                   Register
                 </a>

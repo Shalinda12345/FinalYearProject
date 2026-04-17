@@ -40,14 +40,14 @@ export default function Login() {
       <NavigationBar />
       <main className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-32 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-teal-200/40 blur-3xl" />
+          <div className="absolute -top-32 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-orange-200/40 blur-3xl" />
           <div className="absolute top-24 right-[-10%] h-64 w-64 rounded-full bg-amber-200/40 blur-3xl" />
         </div>
 
         <div className="relative mx-auto max-w-6xl px-6 py-16">
           <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <section className="space-y-6">
-              <p className="inline-flex items-center gap-2 rounded-full border border-teal-200 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-teal-700">
+              <p className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-orange-700">
                 Secure access
               </p>
               <h1 className="text-4xl font-semibold leading-tight font-[var(--font-display)]">
@@ -94,7 +94,7 @@ export default function Login() {
                     type="email"
                     placeholder="you@email.com"
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+                    className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-100"
                     required
                   />
                 </div>
@@ -108,20 +108,20 @@ export default function Login() {
                     onChange={(e) =>
                       setForm({ ...form, password: e.target.value })
                     }
-                    className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+                    className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-100"
                     required
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-teal-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-teal-700"
+                  className="w-full rounded-lg bg-orange-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-orange-700"
                 >
                   Continue
                 </button>
               </form>
 
               <div className="mt-6 flex flex-wrap items-center justify-between gap-3 text-sm text-slate-500">
-                <a href="/register" className="text-teal-700 hover:underline">
+                <a href="/register" className="text-orange-700 hover:underline">
                   Not registered? Create an account
                 </a>
                 <a href="/admin/login" className="text-slate-500 hover:underline">

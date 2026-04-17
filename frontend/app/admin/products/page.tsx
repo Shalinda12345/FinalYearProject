@@ -254,7 +254,7 @@ const ProductsPage = () => {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => startEditing(product)}
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
+                          className="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1 rounded text-sm"
                         >
                           Edit
                         </button>

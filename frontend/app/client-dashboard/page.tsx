@@ -27,14 +27,14 @@ export default function Dashboard() {
       <main className="relative mx-auto max-w-6xl px-6 py-12">
         {/* Background decorative elements */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-teal-400/10 blur-3xl" />
+          <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-orange-400/10 blur-3xl" />
           <div className="absolute top-32 right-0 h-80 w-80 rounded-full bg-indigo-500/10 blur-3xl" />
         </div>
 
         <div className="relative z-10">
           <header className="mb-10">
             <h1 className="text-4xl font-semibold tracking-tight text-slate-900">
-              Welcome back, <span className="text-teal-600 capitalize">{user}</span>
+              Welcome back, <span className="text-orange-600 capitalize">{user}</span>
             </h1>
             <p className="mt-2 text-slate-500">
               Manage your orders, track activity, and overview your account.
