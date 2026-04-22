@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/layout/NavigationBar";
+import { toast } from "sonner";
 
 const STORAGE_KEY = "session_token";
 
@@ -23,15 +24,15 @@ export default function AdminLogin() {
 
       if (res.ok) {
         localStorage.setItem(STORAGE_KEY, data.access_token);
-        alert("login successful");
+        toast.success("Admin login successful");
         localStorage.setItem("admin_user", data.admin_user);
         router.push("/admin/admin-dashboard");
       } else {
-        alert("Access Denied! " + (data.detail || "Invalid credentials"));
+        toast.error("Access Denied! " + (data.detail || "Invalid credentials"));
       }
     } catch (err: any) {
       console.error(err);
-      alert("Network Error: Could not reach the backend. " + err.message);
+      toast.error("Network Error: Could not reach the backend. " + err.message);
     }
   };
 

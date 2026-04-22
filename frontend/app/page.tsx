@@ -115,68 +115,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Why Choose Us */}
-        <section className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32">
-          <div className="grid gap-12 md:grid-cols-2 md:items-center">
-            <div>
-              <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl font-[var(--font-display)]">
-                Built for Wholesale Reliability
-              </h2>
-              <p className="mt-6 text-lg text-slate-600 leading-relaxed font-medium">
-                Our business operates on efficiency and quality. We provide not only top-tier products but an intelligent ordering platform to ensure you never run out of stock. Manage your business seamlessly while we handle the manufacturing.
-              </p>
-              
-              <div className="mt-10 space-y-6">
-                {[
-                  {
-                    title: "Scale Your Inventory",
-                    desc: "Bulk purchasing options with transparent wholesale pricing.",
-                    color: "bg-orange-100 text-orange-600",
-                    icon: "📈"
-                  },
-                  {
-                    title: "Intelligent Forecasting",
-                    desc: "We track demand so we're always ready to fulfill your biggest orders.",
-                    color: "bg-amber-100 text-amber-600",
-                    icon: "🧠"
-                  },
-                  {
-                    title: "Dedicated B2B Support",
-                    desc: "Access your dashboard to track orders, download invoices, and more.",
-                    color: "bg-emerald-100 text-emerald-600",
-                    icon: "🤝"
-                  },
-                ].map((feature, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${feature.color} text-xl`}>
-                      {feature.icon}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-slate-900">{feature.title}</h3>
-                      <p className="mt-2 text-slate-600">{feature.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            <div className="relative mt-8 md:mt-0">
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-orange-400 to-amber-300 opacity-20 blur-2xl"></div>
-              <div className="relative rounded-3xl bg-slate-900 overflow-hidden shadow-2xl p-1">
-                 <div className="w-full bg-slate-800 rounded-[22px] min-h-[400px] flex items-center justify-center flex-col p-8 text-center text-white border border-slate-700/50">
-                    <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/30">
-                      <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                      </svg>
-                    </div>
-                    <h3 className="text-2xl font-bold mb-2">Modern B2B Portal</h3>
-                    <p className="text-slate-300">Manage orders, view historical data, and restock products with just a few clicks through our custom dashboard.</p>
-                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* CTA */}
         <section className="relative z-10 bg-slate-900 py-24 text-center border-t border-slate-800">
            <div className="mx-auto max-w-4xl px-6">

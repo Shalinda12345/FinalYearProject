@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import NavigationBar from "@/components/layout/NavigationBar";
+import { toast } from "sonner";
 
 export default function AddProductsPage() {
   const [form, setForm] = useState({
@@ -19,7 +20,11 @@ export default function AddProductsPage() {
       body: JSON.stringify(form),
     });
     const data = await res.json();
-    alert(data.message || data.detail);
+    if (res.ok) {
+      toast.success(data.message || "Product added successfully");
+    } else {
+      toast.error(data.detail || "Failed to add product");
+    }
   };
 
   return (

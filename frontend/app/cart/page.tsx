@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import NavigationBar from "@/components/layout/NavigationBar";
+import { toast } from "sonner";
 
 interface Product {
   id: number;
@@ -29,7 +30,7 @@ export default function CartPage() {
 
     // 2. Safety check
     if (!storedUserId) {
-      alert("User ID not found. Please Log Out and Log In again.");
+      toast.error("User ID not found. Please Log Out and Log In again.");
       return;
     }
 
@@ -93,7 +94,7 @@ export default function CartPage() {
 
       // 2. Safety check
       if (!storedUserId) {
-        alert("User ID not found. Please Log Out and Log In again.");
+        toast.error("User ID not found. Please Log Out and Log In again.");
         return;
       }
       const token = localStorage.getItem("session_token");
@@ -144,7 +145,7 @@ export default function CartPage() {
 
     // 2. Safety check
     if (!storedUserId) {
-      alert("User ID not found. Please Log Out and Log In again.");
+      toast.error("User ID not found. Please Log Out and Log In again.");
       return;
     }
 
@@ -175,18 +176,18 @@ export default function CartPage() {
       const data = await response.json();
 
       if (response.ok) {
-        alert(`Order Placed! ID: ${data.order_id}`);
+        toast.success(`Order Placed! ID: ${data.order_id}`);
         setCart([]); // Clear the UI cart
         // Ideally, also clear the cart in the backend here
       } else {
         console.error("Server Error:", data);
-        alert(
+        toast.error(
           `Purchase failed: ${data.detail ? JSON.stringify(data.detail) : "Unknown error"}`,
         );
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Network Error");
+      toast.error("Network Error");
     } finally {
       setLoading(false);
     }

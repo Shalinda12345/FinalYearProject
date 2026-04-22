@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import NavigationBar from "@/components/layout/NavigationBar";
+import { toast } from "sonner";
 
 export default function Register() {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
@@ -13,7 +14,11 @@ export default function Register() {
       body: JSON.stringify(form),
     });
     const data = await res.json();
-    alert(data.message || data.detail);
+    if (res.ok) {
+      toast.success(data.message || "Registration successful");
+    } else {
+      toast.error(data.detail || "Registration failed");
+    }
   };
 
   return (

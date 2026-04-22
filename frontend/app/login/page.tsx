@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/layout/NavigationBar";
+import { toast } from "sonner";
 
 const STORAGE_KEY = "session_token";
 
@@ -22,16 +23,16 @@ export default function Login() {
     try {
       if (res.ok) {
         localStorage.setItem(STORAGE_KEY, data.access_token);
-        alert("login successful");
+        toast.success("Login successful");
 
         localStorage.setItem("username", data.username);
         localStorage.setItem("user_id", data.id);
         router.push("/client-dashboard");
       } else {
-        alert(data.detail || "Login failed!");
+        toast.error(data.detail || "Login failed!");
       }
     } catch (error) {
-      alert("Connection error. Is the backend running?");
+      toast.error("Connection error. Is the backend running?");
     }
   };
 

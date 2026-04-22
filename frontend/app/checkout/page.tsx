@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function Checkout() {
   const [loading, setLoading] = useState(false);
@@ -38,10 +39,10 @@ export default function Checkout() {
       const data = await response.json();
 
       if (response.ok) {
-        alert(`Order Placed! ID: ${data.order_id}`);
+        toast.success(`Order Placed! ID: ${data.order_id}`);
         // Clear cart here
       } else {
-        alert("Purchase failed");
+        toast.error("Purchase failed");
       }
     } catch (error) {
       console.error("Error:", error);

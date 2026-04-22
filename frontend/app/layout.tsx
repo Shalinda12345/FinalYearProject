@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const display = Playfair_Display({
   variable: "--font-display",
@@ -29,6 +30,7 @@ export default function RootLayout({
         className={`${display.variable} ${body.variable} antialiased font-[var(--font-body)] bg-slate-50 text-slate-900`}
       >
         {children}
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

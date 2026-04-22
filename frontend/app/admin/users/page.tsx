@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/layout/NavigationBar";
 import { Trash2, Edit2, Check, X } from "lucide-react";
+import { toast } from "sonner";
 
 export default function ManageUsers() {
   const [adminUser, setAdminUser] = useState("");
@@ -49,8 +50,9 @@ export default function ManageUsers() {
       });
       if (res.ok) {
         setUsers(users.filter((user) => user.id !== userId));
+        toast.success("User deleted successfully");
       } else {
-        alert("Failed to delete user");
+        toast.error("Failed to delete user");
       }
     } catch (error) {
       console.error("Failed to delete user", error);
@@ -71,13 +73,14 @@ export default function ManageUsers() {
           )
         );
         setEditingUserId(null);
+        toast.success("User details updated");
       } else {
         const errorData = await res.json();
-        alert(errorData.detail || "Failed to update user");
+        toast.error(errorData.detail || "Failed to update user");
       }
     } catch (error) {
       console.error("Failed to update user", error);
-      alert("An error occurred while updating the user.");
+      toast.error("An error occurred while updating the user.");
     }
   };
 

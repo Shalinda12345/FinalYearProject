@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/layout/NavigationBar";
+import { toast } from "sonner";
 
 // Define what a Product looks like in TypeScript
 interface Product {
@@ -60,7 +61,7 @@ export default function ProductsPage() {
     const token = localStorage.getItem("session_token");
     
     if (!storedUserId || !token) {
-      alert("User not logged in!");
+      toast.error("User not logged in!");
       return;
     }
 
@@ -81,14 +82,14 @@ export default function ProductsPage() {
       });
 
       if (res.ok) {
-        alert("Product added to cart!");
+        toast.success("Product added to cart!");
       } else {
         const err = await res.json();
-        alert("Failed to add to cart: " + (err.detail || "Unauthorized"));
+        toast.error("Failed to add to cart: " + (err.detail || "Unauthorized"));
       }
     } catch (error) {
       console.error("Cart error:", error);
-      alert("Error adding to cart");
+      toast.error("Error adding to cart");
     }
   };
 
