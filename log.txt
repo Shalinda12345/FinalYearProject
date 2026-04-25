@@ -1,2 +1,0 @@
-Created the Backend and Frontend Folders
-Created the login and registration (Authentication)
