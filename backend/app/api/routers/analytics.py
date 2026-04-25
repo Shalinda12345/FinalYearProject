@@ -72,7 +72,11 @@ def _linear_forecast(daily_stats, days):
     try:
         model = _load_prophet_model()
         if model:
-            future = model.make_future_dataframe(periods=days)
+            last_db_date = datetime.fromisoformat(daily_stats[-1]["date"]).date()
+            model_last_date = model.history['ds'].max().to_pydatetime().date()
+            gap_days = max((last_db_date - model_last_date).days, 0)
+            days_to_generate = gap_days + days
+            future = model.make_future_dataframe(periods=days_to_generate)
             forecast = model.predict(future)
             forecast_results = []
             recent_forecast = forecast.tail(days)
@@ -145,7 +149,13 @@ def _monthly_forecast(daily_stats, months):
     try:
         model = _load_prophet_model()
         if model:
-            days_to_predict = months * 31
+            target_year, target_month = last_year, last_month
+            for _ in range(months):
+                target_year, target_month = _advance_month(target_year, target_month)
+            last_day_of_target = monthrange(target_year, target_month)[1]
+            target_end = datetime(target_year, target_month, last_day_of_target)
+            model_last_date = model.history['ds'].max().to_pydatetime().replace(tzinfo=None)
+            days_to_predict = max((target_end - model_last_date).days + 1, months * 31)
             future = model.make_future_dataframe(periods=days_to_predict)
             forecast = model.predict(future)
             result = []

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3308
--- Generation Time: Apr 04, 2026 at 07:11 PM
+-- Generation Time: Apr 25, 2026 at 11:29 AM
 -- Server version: 9.1.0
 -- PHP Version: 8.3.14
 
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `cart_items` (
   `quantity` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_cart_items_id` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `delivery_date` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_orders_id` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `orders`
@@ -125,7 +125,9 @@ INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `created_at`, `delivery_d
 (15, 4, 65000.00, '2026-03-21 22:05:43', '2026-04-02'),
 (16, 4, 260.00, '2026-03-21 22:38:45', '2026-04-07'),
 (17, 1, 52000.00, '2026-03-26 19:17:51', '2026-03-31'),
-(18, 1, 260.00, '2026-03-28 13:26:40', '2026-03-31');
+(18, 1, 260.00, '2026-03-28 13:26:40', '2026-03-31'),
+(19, 1, 91000.00, '2026-04-23 02:28:32', '2026-04-30'),
+(20, 4, 52000.00, '2026-04-24 17:58:30', '2026-04-30');
 
 -- --------------------------------------------------------
 
@@ -144,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   PRIMARY KEY (`id`),
   KEY `order_id` (`order_id`),
   KEY `ix_order_items_id` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `order_items`
@@ -175,7 +177,11 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`, 
 (22, 16, 1, 1, 260.00, 0.00),
 (23, 17, 2, 100, 260.00, 0.00),
 (24, 17, 1, 100, 260.00, 0.00),
-(25, 18, 1, 1, 260.00, 0.00);
+(25, 18, 1, 1, 260.00, 0.00),
+(26, 19, 1, 200, 260.00, 190.00),
+(27, 19, 2, 150, 260.00, 190.00),
+(28, 20, 1, 100, 260.00, 190.00),
+(29, 20, 2, 100, 260.00, 190.00);
 
 -- --------------------------------------------------------
 
@@ -221,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `users`
@@ -231,7 +237,8 @@ INSERT INTO `users` (`id`, `username`, `email`, `hashed_password`, `created_at`)
 (1, 'Fresh Cow', 'test@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$NWasda7VmlOqlfI+5zwn5A$LhlmPAYYnZpEGbIkw+C5UYPcZR/eRgvMTfdB/P/mn8w', '2026-02-03 20:04:10'),
 (2, 'Tharaka', 'test1@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$S+m9F+K8t9b6X0tpjTEGAA$b0SiHcI3wOvszFC9M0Ng3RU4hp0sM0knGSx41TA+Y6Y', '2026-02-03 20:12:17'),
 (3, 'Milan', 'test2@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$BsA4Z4wRAoAQQshZi5GS8g$V+BUbqDHO+L81cz+nJ8vmxfA+4sYLQfPTZhGZSJejCU', '2026-02-04 15:03:21'),
-(4, 'Heshan', 'hkoralagamage@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$8J6Tck7JGcP4HwOAsBYiJA$LrnEuBeYR4RdkC8nW65M0MeputVucg9Itx3ejpcnI8I', '2026-03-21 16:35:06');
+(4, 'Heshan', 'hshalindaofficial@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$8J6Tck7JGcP4HwOAsBYiJA$LrnEuBeYR4RdkC8nW65M0MeputVucg9Itx3ejpcnI8I', '2026-03-21 16:35:06'),
+(5, 'demouser', 'demoemail@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$9F7LmXNuTek9x5iztlZKCQ$EWQRkzo1UuEPA6dpSwcPzGOqfIP27ByJd6KEKU0oGY0', '2026-04-22 20:53:32');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
