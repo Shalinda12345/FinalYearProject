@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/layout/NavigationBar";
-import { PackagePlus, Boxes, ClipboardList, TrendingUp, Users, Download } from "lucide-react";
+import { PackagePlus, Boxes, ClipboardList, TrendingUp, Users, Download, Mail } from "lucide-react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -356,6 +356,12 @@ export default function AdminDashboard() {
               className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2"
             >
               <Users className="h-4 w-4" /> Manage Users
+            </button>
+            <button
+              onClick={() => router.push("/admin/contact-inquiries")}
+              className="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2"
+            >
+              <Mail className="h-4 w-4" /> Contact Inquiries
             </button>
             <button
               onClick={() => {

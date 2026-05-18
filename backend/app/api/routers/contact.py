@@ -16,3 +16,17 @@ def create_contact(inquiry: schemas.ContactCreate, db: Session = Depends(get_db)
     db.commit()
     db.refresh(db_inquiry)
     return {"message": "Inquiry received successfully!"}
+
+@router.get("/contact/inquiries")
+def get_contact_inquiries(db: Session = Depends(get_db)):
+    inquiries = db.query(models.ContactInquiry).order_by(models.ContactInquiry.created_at.desc()).all()
+    return [
+        {
+            "id": inq.id,
+            "name": inq.name,
+            "email": inq.email,
+            "message": inq.message,
+            "created_at": inq.created_at.isoformat() if inq.created_at else None
+        }
+        for inq in inquiries
+    ]

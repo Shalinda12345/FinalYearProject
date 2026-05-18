@@ -68,6 +68,16 @@ class ContactCreate(BaseModel):
     email: EmailStr
     message: str
 
+class ContactResponse(BaseModel):
+    id: int
+    name: str
+    email: str
+    message: str
+    created_at: str | None = None
+
+    class Config:
+        from_attributes = True
+
 class UserUpdate(BaseModel):
     username: str
     email: EmailStr
